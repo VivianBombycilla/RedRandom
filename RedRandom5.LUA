@@ -25,9 +25,9 @@
 ----------------------------------------------------------------
 
 ---- VARIABLES TO EDIT FOR EACH RUN ----
-end_frame = 1000 -- Set to -1 for forever
-update_multiple = 1000
-save_file_name = "Test1"
+end_frame = -1 -- Set to -1 for forever
+update_multiple = 1000000
+save_file_name = "RedRandom"
 start_new = false -- Set to true if starting a new run with the same name. Set to false if continuing a run.
 
 ---- FUNCTIONS ----
