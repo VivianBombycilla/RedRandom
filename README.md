@@ -1,5 +1,5 @@
 # RedRandom5
-Plays Pokemon Red Randomly in BizHawk Emulator. At least my 5th attempt.
+Plays Pokemon Red Randomly in BizHawk Emulator. At least my 5th attempt hence the name.
 
 ## Requirements
 - Pokemon Red ROM
@@ -13,7 +13,7 @@ Plays Pokemon Red Randomly in BizHawk Emulator. At least my 5th attempt.
 3. Create a folder called "Savestates" in that folder (So that's "\Lua\Savestates" for me).
 ### Running
 4. Edit the editable variables in RedRandom5.LUA
-5. Open Tools -> TASStudio and close it. (This is necessary, until [this Bizhawk issue is resolved](https://github.com/TASVideos/BizHawk/issues/2525).)
+5. **Open Tools -> TASStudio and close it.** (This is necessary, until [this Bizhawk issue is resolved](https://github.com/TASVideos/BizHawk/issues/2525). Also I keep forgetting to do this.)
 6. Open Tools -> Lua Console.
 7. In the Lua Console window, go to Script -> Open Script
 8. The program will now play Pokemon Red Randomly!
