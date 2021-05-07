@@ -17,3 +17,7 @@ Plays Pokemon Red Randomly in BizHawk Emulator. At least my 5th attempt hence th
 6. Open Tools -> Lua Console.
 7. In the Lua Console window, go to Script -> Open Script
 8. The program will now play Pokemon Red Randomly!
+### Additional
+- Config -> Speed/Skip -> Skip 0 (never). I'm not exactly sure if this matters, but it might. It probably doesn't.
+- Config -> Hotkeys, Pause. Setting the Pause Hotkey to something like Escape is super helpful. I use it a lot.
+- Config -> Hotkeys, Frame Advance.
