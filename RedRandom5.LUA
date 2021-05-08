@@ -48,6 +48,7 @@ start_new = false -- Set to false if continuing a run (Will start a new run if n
 function create_file_names()
 	buttons_name = save_file_name.."_buttons.txt"
 	positions_name = save_file_name.."_positions.txt"
+	savestate_name = "Savestates/"..save_file_name..".state"
 	temp_name = save_file_name.."_temp.txt"
 end
 function create_new_update_variables()
@@ -194,18 +195,23 @@ function try_opening_savefiles()
 	buttons_file:close()
 	local positions_file = io.open(positions_name,"r")
 	positions_file:close()
+	local savestate_file = io.open(savestate_name,"r")
+	savestate_file:close()
 	print("Success!")
 end
 function check_savefiles()
 	print("Checking savefiles...")
+	
 	local buttons_file = io.open(buttons_name,"r")
 	io.input(buttons_file)
 	check_frames = io.read("*line")
 	buttons_file:close()
+	
 	local positions_file = io.open(positions_name,"r")
 	io.input(positions_file)
 	check_frames_temp = io.read("*line")
 	positions_file:close()
+	
 	if check_frames ~= check_frames_temp then
 		print("Save files corrupted...")
 		return false
@@ -235,7 +241,7 @@ function load_saves()
 		print("Loading savefiles!")
 		frame = get_frame_from_save(buttons_name)
 		fix_rng(frame)
-		savestate.load("Savestates/"..save_file_name.."-Frame"..frame..".state")
+		savestate.load(savestate_name)
 	else
 		print("Initializing savefiles!")
 		initialize_savefiles()
@@ -259,7 +265,7 @@ print("Beginning to play!")
 -- MAIN LOOP --
 while true do
 	if frame%update_multiple == 0 and emu.framecount() ~= 0 then
-		savestate.save("Savestates/"..save_file_name.."-Frame"..frame..".state")
+		savestate.save(savestate_name)
 		update_savefiles()
 	end
 	if frame == end_frame then
