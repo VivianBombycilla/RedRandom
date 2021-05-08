@@ -273,8 +273,6 @@ while true do
 	end
 	set_random_button()
 	update_variables()
-	gui.text(100,0,"mnemonic:"..in_string)
-	gui.text(100,16,"map:"..current_map)
 	emu.frameadvance()
 	frame = frame + 1
 end
