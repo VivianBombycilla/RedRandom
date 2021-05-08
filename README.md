@@ -20,3 +20,5 @@ Plays Pokemon Red Randomly in BizHawk Emulator. At least my 5th attempt hence th
 ### Additional
 - Config -> Speed/Skip -> Skip 0 (never). I'm not exactly sure if this matters, but it might. It probably doesn't.
 - Config -> Hotkeys, Pause. Setting the Pause Hotkey to something like Escape is super helpful. I use it a lot.
+- **The random seed should be the same, for the same save file name.** I'll fix that at some point.
+- You can delete the save states that you don't need in the Savestates folder.
