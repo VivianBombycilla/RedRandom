@@ -1,5 +1,5 @@
 # RedRandom5
-Plays Pokemon Red Randomly in BizHawk Emulator. At least my 5th attempt hence the name.
+Plays Pokemon Red Randomly in BizHawk Emulator. At least my 5th attempt hence the name. For an example of a very similar program, see https://www.youtube.com/watch?v=hgO7bEn4j0M.
 
 ## Requirements
 - Pokemon Red ROM
