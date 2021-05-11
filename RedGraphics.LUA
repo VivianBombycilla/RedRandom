@@ -132,7 +132,7 @@ client.SetGameExtraPadding(0,0,180,16)
 client.setwindowsize(2)
 while true do
 	current_map = memory.readbyte(54110)
-	gui.drawImage("testimage2.png",160,0)
+	gui.drawImage("red_map.png",160,0)
 	current_position = {current_map,memory.readbyte(54114),memory.readbyte(54113)}
 	gui.text(0,288,"Map:"..current_map)
 	gui.text(0,304,"X:"..current_position[2].." Y:"..current_position[3])
