@@ -1,15 +1,16 @@
 ---- INFORMATION -----------------------------------------------
 -- Created: May 5, 2021
--- Last updated: May 8, 2021
+-- Last updated: May 13, 2021
 -- By: Willow
 -- Description: This script will play Pokemon Red Randomly. 
 ----------------------------------------------------------------
 
 ---- VARIABLES TO EDIT FOR EACH RUN ----
 end_frame = -1 -- Set to -1 for forever
-update_multiple = 1000000 -- If this is too small, then there will be too many savestates in the Savestates folder. If it's too big, it won't save often enough.
+update_multiple = 1000 -- If this is too small, then there will be too many savestates in the Savestates folder. If it's too big, it won't save often enough.
 save_file_name = "RedRandom" -- Identifies each run.
 start_new = false -- Set to false if continuing a run (Will start a new run if no savefiles detected or if savefiles are corrupted). Set to true if starting a new run with the same name.
+starting_random_seed = {22945,14972,8468} -- Should be three random integers from 1 to 30000.
 
 ---- FUNCTIONS ----
 function create_file_names()
@@ -33,7 +34,9 @@ function update_buttons()
 	io.input(buttons_file)
 	io.output(temp_file)
 	io.read("*line")
-	io.write(frame.."\n")
+	io.write(frame.."\n") -- Write new frame
+	io.read("*line")
+	io.write(random_seed[1].." "..random_seed[2].." "..random_seed[3].."\n") -- Write new random seed
 	for i=1,8 do
 		local get = io.read("*line") + new_buttons[i]
 		io.write(get.."\n")
@@ -47,7 +50,7 @@ function transfer_buttons(from_name,to_name)
 	local to_file = io.open(to_name,"w")
 	io.input(from_file)
 	io.output(to_file)
-	for i=1,9 do
+	for i=1,10 do
 		io.write((io.read("*line")).."\n")
 	end
 	from_file:close()
@@ -57,6 +60,7 @@ function save_new_buttons(buttons_array)
 	local buttons_file = io.open(buttons_name,"w")
 	io.output(buttons_file)
 	io.write(frame.."\n")
+	io.write(random_seed[1].." "..random_seed[2].." "..random_seed[3].."\n")
 	for n=1,8 do
 		io.write(buttons_array[n].."\n")
 	end
@@ -70,6 +74,7 @@ function save_new_positions(positions_array)
 	local positions_file = io.open(positions_name,"w")
 	io.output(positions_file)
 	io.write(frame.."\n")
+	io.write(random_seed[1].." "..random_seed[2].." "..random_seed[3].."\n")
 	io.write(#positions_array.."\n")
 	for i=1,#positions_array do
 		io.write(positions_array[i][1].." "..positions_array[i][2].." "..positions_array[i][3].." "..positions_array[i][4].."\n")
@@ -82,6 +87,7 @@ function transfer_positions(from_name,to_name,length)
 	io.input(from_file)
 	io.output(to_file)
 	io.write((io.read("*line")).."\n") -- read and write frame
+	io.write((io.read("*line")).."\n") -- read and write random seed
 	-- Note: The transfer_positions function is only used in the function update_positions. 
 	-- That function creates a half-finished positions file with no length indicator - that is stored and changed locally. 
 	-- A proper transfer_positions function may be added later.
@@ -114,6 +120,8 @@ function update_positions()
 	io.output(temp_file)
 	io.read("*line")
 	io.write(frame.."\n")
+	io.read("*line")
+	io.write(random_seed[1].." "..random_seed[2].." "..random_seed[3].."\n")
 	local read_length = io.read("*line")
 	for i=1,read_length do
 		read_position = {io.read("*number"),io.read("*number"),io.read("*number")}
@@ -139,10 +147,49 @@ function update_positions()
 	transfer_positions(temp_name,positions_name,read_length+new_positions_added)
 end
 
-function set_random_button()
-	button = math.random(1,8)
+function set_joypad_button(in_button)
+	if in_button == 1 then
+		joypad.set({Up=true,Down=false,Left=false,Right=false,Start=false,Select=false,A=false,B=false,Power=false})
+		return
+	end
+	if in_button == 2 then
+		joypad.set({Up=false,Down=true,Left=false,Right=false,Start=false,Select=false,A=false,B=false,Power=false})
+		return
+	end
+	if in_button == 3 then
+		joypad.set({Up=false,Down=false,Left=true,Right=false,Start=false,Select=false,A=false,B=false,Power=false})
+		return
+	end
+	if in_button == 4 then
+		joypad.set({Up=false,Down=false,Left=false,Right=true,Start=false,Select=false,A=false,B=false,Power=false})
+		return
+	end
+	if in_button == 5 then
+		joypad.set({Up=false,Down=false,Left=false,Right=false,Start=true,Select=false,A=false,B=false,Power=false})
+		return
+	end
+	if in_button == 6 then
+		joypad.set({Up=false,Down=false,Left=false,Right=false,Start=false,Select=true,A=false,B=false,Power=false})
+		return
+	end
+	if in_button == 7 then
+		joypad.set({Up=false,Down=false,Left=false,Right=false,Start=false,Select=false,A=true,B=false,Power=false})
+		return
+	end
+	if in_button == 8 then
+		joypad.set({Up=false,Down=false,Left=false,Right=false,Start=false,Select=false,A=false,B=true,Power=false})
+		return
+	end
+end
+function set_random_button() -- Wichmann-Hill PRNG, because it's easy.
+	random_seed[1] = (171*random_seed[1])%30269
+	random_seed[2] = (172*random_seed[2])%30307
+	random_seed[3] = (170*random_seed[3])%30323
+	local rand_result = (random_seed[1]/30269 + random_seed[2]/30307 + random_seed[3]/30323)%1
+	button = math.floor(rand_result*8 + 1)
 	in_string = BUTTONS[button]
-	joypad.setfrommnemonicstr(in_string)
+	set_joypad_button(button)
+	--joypad.setfrommnemonicstr(in_string)
 end
 function update_variables()
 	current_map = memory.readbyte(54110)
@@ -186,34 +233,32 @@ function check_savefiles()
 	print("Success!")
 	return true
 end
-function get_frame_from_save(file_name)
+function get_info_from_save(file_name)
 	local file = io.open(file_name,"r")
 	io.input(file)
-	get = io.read("*line")
+	frame = io.read("*line")
+	random_seed = {io.read("*number"),io.read("*number"),io.read("*number")}
 	file:close()
-	return get
-end
-function fix_rng(frames)
-	rng_start_time = os.clock()
-	for i=1,frames do
-		math.random(1,8)
-	end
-	print(string.format("RNG fixed in %.2f seconds",os.clock()-rng_start_time))
 end
 
 function load_saves()
 	create_file_names()
 	create_new_update_variables()
+	if tastudio.engaged() then
+		error("Close TASStudio!")
+	end
 	if (not start_new and pcall(try_opening_savefiles) and check_savefiles()) then
 		print("Loading savefiles!")
-		frame = get_frame_from_save(buttons_name)
-		fix_rng(frame)
+		get_info_from_save(buttons_name)
 		savestate.load(savestate_name)
 	else
+		savestate.load("blank.state")
 		print("Initializing savefiles!")
+		random_seed = starting_random_seed
 		initialize_savefiles()
 	end
 end
+
 
 ---- STATIC VARIABLES ----
 BUTTONS = {"U........",".D.......","..L......","...R.....","....S....",".....s...","......B..",".......A."}
@@ -224,8 +269,6 @@ console.clear()
 print("--RedRandom5 by Willow--")
 frame = 0
 start_time = os.clock()
-math.randomseed(1)
-savestate.load("blank.state")
 load_saves()
 print(string.format("Loaded in %.2f seconds",os.clock()-start_time))
 print("Beginning to play!")
@@ -246,4 +289,5 @@ end
 
 -- ENDING --
 client.pause()
-print(string.format("elapsed time: %.4f\n", os.clock() - start_time))
+print("Program Ending.")
+print(string.format("Elapsed time: %.4f\n", os.clock() - start_time))
