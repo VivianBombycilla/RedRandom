@@ -6,8 +6,8 @@
 ----------------------------------------------------------------
 
 ---- VARIABLES TO EDIT FOR EACH RUN ----
-end_frame = -1 -- Set to -1 for forever
-update_multiple = 1000 -- If this is too small, then there will be too many savestates in the Savestates folder. If it's too big, it won't save often enough.
+end_frame = -1 -- Frame to end on. Set to -1 for forever.
+update_multiple = 100000 -- How many frames before each update to save files.
 save_file_name = "RedRandom" -- Identifies each run.
 start_new = false -- Set to false if continuing a run (Will start a new run if no savefiles detected or if savefiles are corrupted). Set to true if starting a new run with the same name.
 starting_random_seed = {22945,14972,8468} -- Should be three random integers from 1 to 30000.
