@@ -13,12 +13,10 @@ Plays Pokemon Red Randomly in BizHawk Emulator. At least my 5th attempt hence th
 3. Create a folder called "Savestates" in that folder (So that's "\Lua\Savestates" for me).
 ### Running
 4. Edit the editable variables in RedRandom5.LUA
-5. **Open Tools -> TASStudio and close it.** (This is necessary, until [this Bizhawk issue is resolved](https://github.com/TASVideos/BizHawk/issues/2525). Also I keep forgetting to do this.)
-6. Open Tools -> Lua Console.
-7. In the Lua Console window, go to Script -> Open Script
-8. The program will now play Pokemon Red Randomly!
+5. Open Tools -> Lua Console.
+6. In the Lua Console window, go to Script -> Open Script
+7. The program will now play Pokemon Red Randomly!
 ### Additional
 - Config -> Speed/Skip -> Skip 0 (never). I'm not exactly sure if this matters, but it might. It probably doesn't.
 - Config -> Hotkeys, Pause. Setting the Pause Hotkey to something like Escape is super helpful. I use it a lot.
 - **The random seed should be the same, for the same save file name.** I'll fix that at some point.
-- You can delete the save states that you don't need in the Savestates folder.
