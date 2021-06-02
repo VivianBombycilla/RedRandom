@@ -265,7 +265,7 @@ BUTTONS = {"U........",".D.......","..L......","...R.....","....S....",".....s..
 ---- MAIN ----
 -- INITIALIZATION --
 console.clear()
-print("--RedRandom5 by Willow--")
+print("--RedRandom5 by Vivian--")
 frame = 0
 start_time = os.clock()
 load_saves()
