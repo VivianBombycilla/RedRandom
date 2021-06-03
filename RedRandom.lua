@@ -5,11 +5,13 @@
 ----------------------------------------------------------------
 
 ---- VARIABLES TO EDIT FOR EACH RUN ----
-end_frame = -1 -- Frame to end on. Set to -1 for forever.
+end_frame = -1 -- Frame to end on. If this frame is passed over (less than the beginning frame) then it will never stop.
 update_multiple = 100000 -- How many frames before each update to save files.
 save_file_name = "RedRandom" -- Identifies each run.
 start_new = false -- Set to false if continuing a run (Will start a new run if no savefiles detected or if savefiles are corrupted). Set to true if starting a new run with the same name.
-starting_random_seed = {22945,14972,8468} -- Select three random integers from 1 to 30000.
+starting_random_seed = {22945,14972,8468} -- Should be three random integers from 1 to 30000.
+end_condition = "parcel" -- Set alternative end condition. If it doesn't exist, then there is no alternative end condition. "parcel" for when Oak Parcel is obtained for the first time.
+sort_files = true -- Set to true to sort the save files. Here so that if anything goes horribly wrong I can turn it off.
 
 ---- FUNCTIONS ----
 function create_file_names()
@@ -145,6 +147,23 @@ function update_positions()
 	temp_file:close()
 	transfer_positions(temp_name,positions_name,read_length+new_positions_added)
 end
+function sort_positions()
+	local positions_file = io.open(positions_name,"r")
+	io.input(positions_file)
+	local read_frame = io.read("*line")
+	local read_seed = io.read("*line")
+	local read_number = io.read("*line")
+	local read_positions = {}
+	for i=1,read_number do
+		table.insert(read_positions,{io.read("*number"),io.read("*number"),io.read("*number"),io.read("*number")})
+	end
+	positions_file:close()
+	table.sort(read_positions, compare_positions)
+	save_new_positions(read_positions)
+end
+function compare_positions(position_a, position_b)
+	return (position_a[4] > position_b[4])
+end
 
 function set_joypad_button(in_button)
 	if in_button == 1 then
@@ -199,6 +218,9 @@ end
 function update_savefiles()
 	update_buttons()
 	update_positions()
+	if sort_files then
+		sort_positions()
+	end
 	create_new_update_variables()
 end
 
@@ -240,6 +262,19 @@ function get_info_from_save(file_name)
 	file:close()
 end
 
+function check_end_conditions() -- returns true if program should stop
+	if frame == end_frame then
+		print("Ending frame reached")
+		return true
+	end
+	if end_condition == "parcel" then
+	 	if (memory.readbyte(54797) ~= 0) then
+			print("Oak's Parcel received")
+			return true
+		end
+	end
+	return false
+end
 function load_saves()
 	create_file_names()
 	create_new_update_variables()
@@ -277,7 +312,7 @@ while true do
 		savestate.save(savestate_name)
 		update_savefiles()
 	end
-	if frame == end_frame then
+	if check_end_conditions() then
 		break
 	end
 	set_random_button()
@@ -289,4 +324,4 @@ end
 -- ENDING --
 client.pause()
 print("Program Ending.")
-print(string.format("Elapsed time: %.4f\n", os.clock() - start_time))
+print(string.format("Elapsed time: %.2f seconds", os.clock() - start_time))
