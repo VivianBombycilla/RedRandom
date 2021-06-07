@@ -143,9 +143,27 @@ function positions_gradient()
 	pgradient_frame = io.read("*line")
 	io.read("*line")
 	local read_number = io.read("*line")
-	for i=1,read_number do
+	if POSITION_GRADIENT_MODE == "rank" then
+		for i=1,read_number do
+			local read_position = {io.read("*number"),io.read("*number"),io.read("*number"),io.read("*number")}
+			draw_position(new_canvas,read_position,color_gradient(HIGH_GRADIENT_COLOR,LOW_GRADIENT_COLOR,read_number,i),black)
+		end
+	elseif POSITION_GRADIENT_MODE == "frames" then
 		local read_position = {io.read("*number"),io.read("*number"),io.read("*number"),io.read("*number")}
-		draw_position(new_canvas,read_position,color_gradient({255,0,0,255},{255,255,0,0},read_number,i),black)
+		local max_frames = read_position[4]
+		draw_position(new_canvas,read_position,color_gradient(LOW_GRADIENT_COLOR,HIGH_GRADIENT_COLOR,max_frames,read_position[4]),black)
+		for i=1,read_number-1 do
+			local read_position = {io.read("*number"),io.read("*number"),io.read("*number"),io.read("*number")}
+			draw_position(new_canvas,read_position,color_gradient(LOW_GRADIENT_COLOR,HIGH_GRADIENT_COLOR,max_frames,read_position[4]),black)
+		end
+	elseif POSITION_GRADIENT_MODE == "logframes" then
+		local read_position = {io.read("*number"),io.read("*number"),io.read("*number"),io.read("*number")}
+		local max_logframes = math.log(read_position[4])
+		draw_position(new_canvas,read_position,color_gradient(LOW_GRADIENT_COLOR,HIGH_GRADIENT_COLOR,max_logframes,math.log(read_position[4])),black)
+		for i=1,read_number-1 do
+			local read_position = {io.read("*number"),io.read("*number"),io.read("*number"),io.read("*number")}
+			draw_position(new_canvas,read_position,color_gradient(LOW_GRADIENT_COLOR,HIGH_GRADIENT_COLOR,max_logframes,math.log(read_position[4])),black)
+		end
 	end
 	positions_file:close()
 end
@@ -183,7 +201,11 @@ end
 SIZE = 10
 SHOW_CURRENT_POSITION = true
 DO_POSITION_GRADIENT = true
-BACKGROUND_COLOR = "gray"
+
+POSITION_GRADIENT_MODE = "rank" -- options are: "rank", "frames", "logframes"
+LOW_GRADIENT_COLOR = {255,255,0,0} -- AARRGGBB array
+HIGH_GRADIENT_COLOR = {255,0,0,255} -- AARRGGBB array
+BACKGROUND_COLOR = "gray" -- luacolor
 
 ---- MAIN ----
 graphics_pos = {0,0,0}
