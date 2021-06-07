@@ -1,5 +1,5 @@
 # RedRandom
-Plays Pokemon Red Randomly in BizHawk Emulator. For an example of the similar program in action, see https://youtu.be/Ar0CQFvYDbs.
+Plays Pokemon Red Randomly in BizHawk Emulator. For an example of the program in action, see https://youtu.be/Ar0CQFvYDbs.
 
 ## Requirements
 - Pokemon Red ROM
