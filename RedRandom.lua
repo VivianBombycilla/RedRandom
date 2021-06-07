@@ -4,15 +4,6 @@
 -- Description: This script will play Pokemon Red Randomly. 
 ----------------------------------------------------------------
 
----- VARIABLES TO EDIT FOR EACH RUN ----
-end_frame = -1 -- Frame to end on. If this frame is passed over (less than the beginning frame) then it will never stop.
-update_multiple = 100000 -- How many frames before each update to save files.
-save_file_name = "RedRandom" -- Identifies each run.
-start_new = false -- Set to false if continuing a run (Will start a new run if no savefiles detected or if savefiles are corrupted). Set to true if starting a new run with the same name.
-starting_random_seed = {22945,14972,8468} -- Should be three random integers from 1 to 30000.
-end_condition = "parcel" -- Set alternative end condition. If it doesn't exist, then there is no alternative end condition. "parcel" for when Oak Parcel is obtained for the first time.
-sort_files = true -- Set to true to sort the save files. Here so that if anything goes horribly wrong I can turn it off.
-
 ---- FUNCTIONS ----
 function create_file_names()
 	buttons_name = save_file_name.."_buttons.txt"
@@ -293,6 +284,15 @@ function load_saves()
 	end
 end
 
+---- VARIABLES TO EDIT FOR EACH RUN ----
+end_frame = -1 -- Frame to end on. If this frame is passed over (less than the beginning frame) then it will never stop.
+update_multiple = 20000 -- How many frames before each update to save files.
+save_file_name = "RedRandom" -- Identifies each run.
+start_new = false -- Set to false if continuing a run (Will start a new run if no savefiles detected or if savefiles are corrupted). Set to true if starting a new run with the same name.
+starting_random_seed = {22945,14972,8468} -- Should be three random integers from 1 to 30000.
+end_condition = "parcel" -- Set alternative end condition. If it doesn't exist, then there is no alternative end condition. "parcel" for when Oak Parcel is obtained for the first time.
+sort_files = true -- Set to true to sort the save files. Here so that if anything goes horribly wrong I can turn it off.
+
 
 ---- STATIC VARIABLES ----
 BUTTONS = {"U........",".D.......","..L......","...R.....","....S....",".....s...","......B..",".......A."}
@@ -300,7 +300,7 @@ BUTTONS = {"U........",".D.......","..L......","...R.....","....S....",".....s..
 ---- MAIN ----
 -- INITIALIZATION --
 console.clear()
-print("--RedRandom5 by Vivian--")
+print("--RedRandom by Vivian--")
 frame = 0
 start_time = os.clock()
 load_saves()
