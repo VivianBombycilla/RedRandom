@@ -277,7 +277,7 @@ function load_saves()
 		get_info_from_save(buttons_name)
 		savestate.load(savestate_name)
 	else
-		savestate.load("blank.state")
+		savestate.load("Savestates/blank.state")
 		print("Initializing savefiles!")
 		random_seed = starting_random_seed
 		initialize_savefiles()
