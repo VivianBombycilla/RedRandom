@@ -145,9 +145,16 @@ function positions_gradient()
 	local read_number = io.read("*line")
 	for i=1,read_number do
 		local read_position = {io.read("*number"),io.read("*number"),io.read("*number"),io.read("*number")}
-		draw_position(new_canvas,read_position,to_color(255,math.floor((256/read_number)*(read_number-i)),0,math.floor((256/read_number)*(i-1))),black)
+		draw_position(new_canvas,read_position,color_gradient({255,0,0,255},{255,255,0,0},read_number,i),black)
 	end
 	positions_file:close()
+end
+
+function color_gradient(min_color_array,max_color_array,max_value,value)
+	return to_color(math.floor(min_color_array[1]*value/max_value)+math.floor(max_color_array[1]*(max_value-value)/max_value),
+									math.floor(min_color_array[2]*value/max_value)+math.floor(max_color_array[2]*(max_value-value)/max_value),
+									math.floor(min_color_array[3]*value/max_value)+math.floor(max_color_array[3]*(max_value-value)/max_value),
+									math.floor(min_color_array[4]*value/max_value)+math.floor(max_color_array[4]*(max_value-value)/max_value))
 end
 
 function to_color(AA,RR,GG,BB)
@@ -161,7 +168,7 @@ function create_graphics_variables()
 	OFFSETS[37] = {0 *SIZE+5,8 *SIZE+5}
 	OFFSETS[38] = {0 *SIZE+5,0 *SIZE+5}
 	OFFSETS[39] = {0 *SIZE+5,16*SIZE+5}
-	OFFSETS[40] = {9 *SIZE+5,18*SIZE+5}
+	OFFSETS[40] = {0 *SIZE+5,24*SIZE+5}
 
 	MAPS = {}
 	MAPS[0]  = map0
@@ -175,7 +182,7 @@ end
 -- VARIABLES TO EDIT --
 SIZE = 10
 SHOW_CURRENT_POSITION = true
-DO_POSITION_GRADIENT = false
+DO_POSITION_GRADIENT = true
 BACKGROUND_COLOR = "gray"
 
 ---- MAIN ----
@@ -195,6 +202,7 @@ while true do
 	if DO_POSITION_GRADIENT then
 		if frame%update_multiple == 0 and emu.framecount() ~= 0 then
 			positions_gradient(10)
+			new_canvas.Refresh()
 		end
 	end
 	if SHOW_CURRENT_POSITION then
