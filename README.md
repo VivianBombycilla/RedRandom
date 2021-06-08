@@ -19,6 +19,7 @@ Plays Pokemon Red Randomly in BizHawk Emulator. For an example of the program in
 The following may help the program run well.
 - Config -> Speed/Skip -> Skip 0 (never). I'm not exactly sure if this matters, but it might.
 - Config -> Hotkeys, Pause. Setting the Pause Hotkey to something like Escape is super helpful. I use it a lot.
+- Do not edit the savefiles!!! If you can, in your text editor, make the files read-only.
 ### Speed Settings
 The following settings will help the program run as fast as it can.
 - Config -> Speed/Skip -> Unthrottled. This will remove the restriction on emulation speed.
