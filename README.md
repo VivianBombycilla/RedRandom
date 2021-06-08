@@ -9,7 +9,7 @@ Plays Pokemon Red Randomly in BizHawk Emulator. For an example of the program in
 ## Instructions
 ### Downloading
 1. You should have downloaded all the requirements, as well as the files in this git.
-2. Put the files in this git somewhere in the Bizhawk folder (I use "\Lua", the Lua folder)
+2. Put the files in this repository somewhere in the Bizhawk folder (I use "\Lua", the Lua folder)
 ### Running
 3. Edit the editable variables in RedRandom5.LUA
 4. Open Tools -> Lua Console.
