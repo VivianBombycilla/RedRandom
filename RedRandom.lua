@@ -5,21 +5,6 @@
 ----------------------------------------------------------------
 
 ---- FUNCTIONS ----
-function create_file_names()
-	buttons_name = save_file_name.."_buttons.txt"
-	positions_name = save_file_name.."_positions.txt"
-	savestate_name = "Savestates/"..save_file_name..".state"
-	temp_name = save_file_name.."_temp.txt"
-end
-function create_new_update_variables()
-	new_buttons = {0,0,0,0,0,0,0,0}
-	new_positions = {}
-end
-function initialize_savefiles()
-	save_new_buttons(new_buttons)
-	save_new_positions(new_positions)
-end
-
 function update_buttons()
 	local buttons_file = io.open(buttons_name,"r")
 	local temp_file = io.open(temp_name,"w")
@@ -156,6 +141,95 @@ function compare_positions(position_a, position_b)
 	return (position_a[4] > position_b[4])
 end
 
+function save_info()
+	local info_file = io.open(info_name,"w")
+	io.output(info_file)
+	io.write(frame.."\n")
+	io.write(random_seed[1].." "..random_seed[2].." "..random_seed[3].."\n")
+	if save_buttons then
+		io.write("1".."\n")
+	else
+		io.write("0".."\n")
+	end
+	if save_positions then
+		io.write("1".."\n")
+	else
+		io.write("0".."\n")
+	end
+	if load_events then
+		io.write("1".."\n")
+	else
+		io.write("0".."\n")
+	end
+	io.write(current_map or memory.readbyte(54110))
+	info_file:close()
+end
+function load_info()
+	local info_file = io.open(info_name,"r")
+	io.input(info_file)
+	frame = io.read("*number")
+	random_seed = {io.read("*number"),io.read("*number"),io.read("*number")}
+	save_buttons   = io.read("*number")
+	save_positions = io.read("*number")
+	log_events     = io.read("*number")
+	if save_buttons == 1 then
+		save_buttons = true
+	else
+		save_buttons = false
+	end
+	if save_positions == 1 then
+		save_positions = true
+	else
+		save_positions = false
+	end
+	if log_events == 1 then
+		log_events = true
+	else
+		log_events = false
+	end
+	if log_events then
+		new_events["map"] = io.read("*number")
+	end
+	info_file:close()
+end
+
+
+function create_new_events_file()
+	local events_file = io.open(events_name,"w")
+	events_file:close()
+end
+function create_events_file(events_array)
+	local events_file = io.open(events_name,"w")
+	io.output(events_file)
+	for i=1,#events_array do
+		io.write(events_array[i].."\n")
+	end
+	for i=1,5-#events_array do
+		io.write(" ".."\n")
+	end
+	events_file:close()
+end
+function load_events()
+	local events_file = io.open(events_name,"r")
+	io.input(events_file)
+	for i=1,5 do
+		local line = io.read("*line")
+		if line == " " then
+			break
+		end
+		new_events[i] = line
+	end	
+	events_file:close()
+end
+function update_events_variable()
+	if new_events["map"] ~= current_map then
+		new_events["map"] = current_map
+		table.insert(new_events,1,frame..": Entered map "..current_map)
+		table.remove(new_events,max_events+1)
+		create_events_file(new_events)
+	end
+end
+
 function set_joypad_button(in_button)
 	if in_button == 1 then
 		joypad.set({Up=true,Down=false,Left=false,Right=false,Start=false,Select=false,A=false,B=false,Power=false})
@@ -203,12 +277,23 @@ end
 function update_variables()
 	current_map = memory.readbyte(54110)
 	current_position = {current_map,memory.readbyte(54114),memory.readbyte(54113)}
-	update_buttons_variable()
-	update_positions_variable()
+	if save_buttons then
+		update_buttons_variable()
+	end
+	if save_positions then
+		update_positions_variable()
+	end
+	if log_events then
+		update_events_variable()
+	end
 end
 function update_savefiles()
-	update_buttons()
-	update_positions()
+	if save_buttons then
+		update_buttons()
+	end
+	if save_positions then
+		update_positions()
+	end
 	if sort_files then
 		sort_positions()
 	end
@@ -216,43 +301,50 @@ function update_savefiles()
 end
 
 function try_opening_savefiles()
-	print("Checking if savefiles exist...")
-	local buttons_file = io.open(buttons_name,"r")
-	buttons_file:close()
-	local positions_file = io.open(positions_name,"r")
-	positions_file:close()
+	if save_buttons then
+		local buttons_file = io.open(buttons_name,"r")
+		buttons_file:close()
+	end
+	if save_positions then
+		local positions_file = io.open(positions_name,"r")
+		positions_file:close()
+	end
+	
+end
+function try_opening_important_files()
+	local settings_file = io.open(settings_name,"r")
+	settings_file:close()
 	local savestate_file = io.open(savestate_name,"r")
 	savestate_file:close()
-	print("Success!")
-end
-function check_savefiles()
-	print("Checking savefiles...")
-	
-	local buttons_file = io.open(buttons_name,"r")
-	io.input(buttons_file)
-	check_frames = io.read("*line")
-	buttons_file:close()
-	
-	local positions_file = io.open(positions_name,"r")
-	io.input(positions_file)
-	check_frames_temp = io.read("*line")
-	positions_file:close()
-	
-	if check_frames ~= check_frames_temp then
-		print("Save files corrupted...")
-		return false
-	end
-	print("Success!")
-	return true
-end
-function get_info_from_save(file_name)
-	local file = io.open(file_name,"r")
-	io.input(file)
-	frame = io.read("*line")
-	random_seed = {io.read("*number"),io.read("*number"),io.read("*number")}
-	file:close()
 end
 
+function create_file_names()
+	buttons_name = save_file_name.."_buttons.txt"
+	positions_name = save_file_name.."_positions.txt"
+	info_name = save_file_name.."_info.txt"
+	events_name = save_file_name.."_events.txt"
+	savestate_name = "Savestates/"..save_file_name..".state"
+	temp_name = save_file_name.."_temp.txt"
+end
+function create_new_update_variables()
+	new_buttons = {0,0,0,0,0,0,0,0}
+	new_positions = {}
+	if new_events == nil then
+		new_events = {}
+	end
+end
+function initialize_savefiles()
+	if save_buttons then
+		save_new_buttons(new_buttons)
+	end
+	if save_positions then
+		save_new_positions(new_positions)
+	end
+	if log_events then
+		create_new_events_file()
+	end
+	save_info()
+end
 function check_end_conditions() -- returns true if program should stop
 	if frame == end_frame then
 		print("Ending frame reached")
@@ -266,32 +358,48 @@ function check_end_conditions() -- returns true if program should stop
 	end
 	return false
 end
-function load_saves()
+function initialize()
+	frame = 0
+	start_time = os.clock()
 	create_file_names()
 	create_new_update_variables()
+	
 	if tastudio.engaged() then
 		error("Close TASStudio!")
 	end
-	if (not start_new and pcall(try_opening_savefiles) and check_savefiles()) then
-		print("Loading savefiles!")
-		get_info_from_save(buttons_name)
-		savestate.load(savestate_name)
-	else
-		savestate.load("Savestates/blank.state")
-		print("Initializing savefiles!")
-		random_seed = starting_random_seed
-		initialize_savefiles()
+	if (not start_new and pcall(try_opening_important_files)) then
+		load_info()
+		if pcall(try_opening_savefiles) then
+			savestate.load(savestate_name)
+			return
+		else 
+			error("Save files corrupted :(")
+		end
 	end
+	
+	-- Start new
+	savestate.load("Savestates/blank.state")
+	print("Initializing savefiles!")
+	random_seed = starting_random_seed
+	initialize_savefiles()
+	savestate.save(savestate_name)
 end
 
 ---- VARIABLES TO EDIT FOR EACH RUN ----
 end_frame = -1 -- Frame to end on. If this frame is passed over (less than the beginning frame) then it will never stop.
-update_multiple = 20000 -- How many frames before each update to save files.
-save_file_name = "RedRandom" -- Identifies each run.
-start_new = false -- Set to false if continuing a run (Will start a new run if no savefiles detected or if savefiles are corrupted). Set to true if starting a new run with the same name.
-starting_random_seed = {22945,14972,8468} -- Should be three random integers from 1 to 30000.
 end_condition = "parcel" -- Set alternative end condition. If it doesn't exist, then there is no alternative end condition. "parcel" for when Oak Parcel is obtained for the first time.
+
+update_multiple = 1000 -- How many frames before each update to save files.
+save_file_name = "RedRandom" -- Identifies each run.
+start_new = true -- Set to false if continuing a run (Will start a new run if no savefiles detected). Set to true if starting a new run with the same name.
 sort_files = true -- Set to true to sort the save files. Here so that if anything goes horribly wrong I can turn it off.
+max_events = 10
+
+-- Note: These settings will not change if you have a saved file.
+starting_random_seed = {1,1,1} -- Should be three random integers from 1 to 30000.
+save_buttons = true
+save_positions = true
+log_events = true
 
 
 ---- STATIC VARIABLES ----
@@ -301,10 +409,7 @@ BUTTONS = {"U........",".D.......","..L......","...R.....","....S....",".....s..
 -- INITIALIZATION --
 console.clear()
 print("--RedRandom by Vivian--")
-frame = 0
-start_time = os.clock()
-load_saves()
-print(string.format("Loaded in %.2f seconds",os.clock()-start_time))
+initialize()
 print("Beginning to play!")
 -- MAIN LOOP --
 while true do
