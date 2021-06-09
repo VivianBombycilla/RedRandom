@@ -9,16 +9,17 @@ Plays Pokemon Red Randomly in BizHawk Emulator. For an example of the program in
 ## Instructions
 ### Downloading
 1. You should have downloaded all the requirements, as well as the files in this git.
-2. Put the files in this git somewhere in the Bizhawk folder (I use "\Lua", the Lua folder)
-3. Create a folder called "Savestates" in that folder (So that's "\Lua\Savestates" for me).
+2. Put the files in this repository somewhere in the Bizhawk folder (I use "\Lua", the Lua folder)
 ### Running
-4. Edit the editable variables in RedRandom5.LUA
-5. Open Tools -> Lua Console.
-6. In the Lua Console window, go to Script -> Open Script
-7. The program will now play Pokemon Red Randomly!
+3. Edit the editable variables in RedRandom5.LUA
+4. Open Tools -> Lua Console.
+5. In the Lua Console window, go to Script -> Open Script
+6. The program will now play Pokemon Red Randomly!
 ### Additional
-- Config -> Speed/Skip -> Skip 0 (never). I'm not exactly sure if this matters, but it might. It probably doesn't.
+The following may help the program run well.
+- Config -> Speed/Skip -> Skip 0 (never). I'm not exactly sure if this matters, but it might.
 - Config -> Hotkeys, Pause. Setting the Pause Hotkey to something like Escape is super helpful. I use it a lot.
+- Do not edit the savefiles!!! If you can, in your text editor, make the files read-only.
 ### Speed Settings
 The following settings will help the program run as fast as it can.
 - Config -> Speed/Skip -> Unthrottled. This will remove the restriction on emulation speed.
