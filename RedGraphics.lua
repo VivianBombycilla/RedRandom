@@ -1,7 +1,3 @@
--- Canvas: 320x320 pixels
-
--- TODO: MAKE FUNCTIONS PARAMETERS BETTER --
-
 do -- MAP ARRAYS --
 
 -- Map 0: Pallet Town
@@ -195,12 +191,166 @@ function create_graphics_variables()
 	MAPS[38] = map38
 	MAPS[39] = map39
 	MAPS[40] = map40
+	
+	POKEMON = {}
+	POKEMON[1] = "Rhydon"
+	POKEMON[2] = "Kangaskhan"
+	POKEMON[3] = "Nidoran♂"
+	POKEMON[4] = "Clefairy"
+	POKEMON[5] = "Spearow"
+	POKEMON[6] = "Voltorb"
+	POKEMON[7] = "Nidoking"
+	POKEMON[8] = "Slowbro"
+	POKEMON[9] = "Ivysaur"
+	POKEMON[10] = "Exeggutor"
+	POKEMON[11] = "Lickitung"
+	POKEMON[12] = "Exeggcute"
+	POKEMON[13] = "Grimer"
+	POKEMON[14] = "Gengar"
+	POKEMON[15] = "Nidoran♀"
+	POKEMON[16] = "Nidoqueen"
+	POKEMON[17] = "Cubone"
+	POKEMON[18] = "Rhyhorn"
+	POKEMON[19] = "Lapras"
+	POKEMON[20] = "Arcanine"
+	POKEMON[21] = "Mew"
+	POKEMON[22] = "Gyarados"
+	POKEMON[23] = "Shellder"
+	POKEMON[24] = "Tentacool"
+	POKEMON[25] = "Gastly"
+	POKEMON[26] = "Scyther"
+	POKEMON[27] = "Staryu"
+	POKEMON[28] = "Blastoise"
+	POKEMON[29] = "Pinsir"
+	POKEMON[30] = "Tangela"
+	POKEMON[33] = "Growlithe"
+	POKEMON[34] = "Onix"
+	POKEMON[35] = "Fearow"
+	POKEMON[36] = "Pidgey"
+	POKEMON[37] = "Slowpoke"
+	POKEMON[38] = "Kadabra"
+	POKEMON[39] = "Graveler"
+	POKEMON[40] = "Chansey"
+	POKEMON[41] = "Machoke"
+	POKEMON[42] = "Mr. Mime"
+	POKEMON[43] = "Hitmonlee"
+	POKEMON[44] = "Hitmonchan"
+	POKEMON[45] = "Arbok"
+	POKEMON[46] = "Parasect"
+	POKEMON[47] = "Psyduck"
+	POKEMON[48] = "Drowzee"
+	POKEMON[49] = "Golem"
+	POKEMON[51] = "Magmar"
+	POKEMON[53] = "Electabuzz"
+	POKEMON[54] = "Magneton"
+	POKEMON[55] = "Koffing"
+	POKEMON[57] = "Mankey"
+	POKEMON[58] = "Seel"
+	POKEMON[59] = "Diglett"
+	POKEMON[60] = "Tauros"
+	POKEMON[64] = "Farfetch'd"
+	POKEMON[65] = "Venonat"
+	POKEMON[66] = "Dragonite"
+	POKEMON[70] = "Doduo"
+	POKEMON[71] = "Poliwag"
+	POKEMON[72] = "Jynx"
+	POKEMON[73] = "Moltres"
+	POKEMON[74] = "Articuno"
+	POKEMON[75] = "Zapdos"
+	POKEMON[76] = "Ditto"
+	POKEMON[77] = "Meowth"
+	POKEMON[78] = "Krabby"
+	POKEMON[82] = "Vulpix"
+	POKEMON[83] = "Ninetales"
+	POKEMON[84] = "Pikachu"
+	POKEMON[85] = "Raichu"
+	POKEMON[88] = "Dratini"
+	POKEMON[89] = "Dragonair"
+	POKEMON[90] = "Kabuto"
+	POKEMON[91] = "Kabutops"
+	POKEMON[92] = "Horsea"
+	POKEMON[93] = "Seadra"
+	POKEMON[96] = "Sandshrew"
+	POKEMON[97] = "Sandslash"
+	POKEMON[98] = "Omanyte"
+	POKEMON[99] = "Omastar"
+	POKEMON[100] = "Jigglypuff"
+	POKEMON[101] = "Wigglytuff"
+	POKEMON[102] = "Eevee"
+	POKEMON[103] = "Flareon"
+	POKEMON[104] = "Jolteon"
+	POKEMON[105] = "Vaporeon"
+	POKEMON[106] = "Machop"
+	POKEMON[107] = "Zubat"
+	POKEMON[108] = "Ekans"
+	POKEMON[109] = "Paras"
+	POKEMON[110] = "Poliwhirl"
+	POKEMON[111] = "Poliwrath"
+	POKEMON[112] = "Weedle"
+	POKEMON[113] = "Kakuna"
+	POKEMON[114] = "Beedrill"
+	POKEMON[116] = "Dodrio"
+	POKEMON[117] = "Primeape"
+	POKEMON[118] = "Dugtrio"
+	POKEMON[119] = "Venomoth"
+	POKEMON[120] = "Dewgong"
+	POKEMON[123] = "Caterpie"
+	POKEMON[124] = "Metapod"
+	POKEMON[125] = "Butterfree"
+	POKEMON[126] = "Machamp"
+	POKEMON[128] = "Golduck"
+	POKEMON[129] = "Hypno"
+	POKEMON[130] = "Golbat"
+	POKEMON[131] = "Mewtwo"
+	POKEMON[132] = "Snorlax"
+	POKEMON[133] = "Magikarp"
+	POKEMON[136] = "Muk"
+	POKEMON[138] = "Kingler"
+	POKEMON[139] = "Cloyster"
+	POKEMON[141] = "Electrode"
+	POKEMON[142] = "Clefable"
+	POKEMON[143] = "Weezing"
+	POKEMON[144] = "Persian"
+	POKEMON[145] = "Marowak"
+	POKEMON[147] = "Haunter"
+	POKEMON[148] = "Abra"
+	POKEMON[149] = "Alakazam"
+	POKEMON[150] = "Pidgeotto"
+	POKEMON[151] = "Pidgeot"
+	POKEMON[152] = "Starmie"
+	POKEMON[153] = "Bulbasaur"
+	POKEMON[154] = "Venusaur"
+	POKEMON[155] = "Tentacruel"
+	POKEMON[157] = "Goldeen"
+	POKEMON[158] = "Seaking"
+	POKEMON[163] = "Ponyta"
+	POKEMON[164] = "Rapidash"
+	POKEMON[165] = "Rattata"
+	POKEMON[166] = "Raticate"
+	POKEMON[167] = "Nidorino"
+	POKEMON[168] = "Nidorina"
+	POKEMON[169] = "Geodude"
+	POKEMON[170] = "Porygon"
+	POKEMON[171] = "Aerodactyl"
+	POKEMON[173] = "Magnemite"
+	POKEMON[176] = "Charmander"
+	POKEMON[177] = "Squirtle"
+	POKEMON[178] = "Charmeleon"
+	POKEMON[179] = "Wartortle"
+	POKEMON[180] = "Charizard"
+	POKEMON[185] = "Oddish"
+	POKEMON[186] = "Gloom"
+	POKEMON[187] = "Vileplume"
+	POKEMON[188] = "Bellsprout"
+	POKEMON[189] = "Weepinbell"
+	POKEMON[190] = "Victreebel"
 end
 
 -- VARIABLES TO EDIT --
 SIZE = 10
-SHOW_CURRENT_POSITION = true
-DO_POSITION_GRADIENT = true
+SHOW_CURRENT_POSITION = false
+DO_POSITION_GRADIENT = false
+SHOW_POKEMON_INFO = true
 
 POSITION_GRADIENT_MODE = "rank" -- options are: "rank", "frames", "logframes"
 LOW_GRADIENT_COLOR = {255,255,0,0} -- AARRGGBB array
@@ -211,15 +361,21 @@ BACKGROUND_COLOR = "gray" -- luacolor
 graphics_pos = {0,0,0}
 -- INITIALIZE CANVAS --
 create_graphics_variables()
-new_canvas = gui.createcanvas(42*SIZE+10,37*SIZE)
-new_canvas.DrawRectangle(0,0,42*SIZE+10,37*SIZE,BACKGROUND_COLOR,BACKGROUND_COLOR)
-new_canvas.SetTitle("RedGraphics")
-draw_map(new_canvas,0 )
-draw_map(new_canvas,12)
-draw_map(new_canvas,37)
-draw_map(new_canvas,38)
-draw_map(new_canvas,39)
-draw_map(new_canvas,40)
+if SHOW_CURRENT_POSITION or DO_POSITION_GRADIENT then
+	new_canvas = gui.createcanvas(42*SIZE+10,37*SIZE)
+	new_canvas.DrawRectangle(0,0,42*SIZE+10,37*SIZE,BACKGROUND_COLOR,BACKGROUND_COLOR)
+	new_canvas.SetTitle("RedGraphics")
+	draw_map(new_canvas,0 )
+	draw_map(new_canvas,12)
+	draw_map(new_canvas,37)
+	draw_map(new_canvas,38)
+	draw_map(new_canvas,39)
+	draw_map(new_canvas,40)
+	client.SetGameExtraPadding(0,0,0,8)
+end
+if SHOW_POKEMON_INFO then
+	client.SetGameExtraPadding(0,0,0,24)
+end
 while true do
 	if DO_POSITION_GRADIENT then
 		if frame%update_multiple == 0 and emu.framecount() ~= 0 then
@@ -233,6 +389,22 @@ while true do
 			graphics_pos = current_position
 			draw_position(new_canvas,graphics_pos,nil,to_color(255,0,255,0))
 			new_canvas.Refresh()
+		end
+	end
+	if SHOW_POKEMON_INFO then
+		currpokemon = memory.readbyte(0xD164)
+		if POKEMON[currpokemon] ~= nil then
+			currlevel = memory.readbyte(53644)
+			currhp = 128*memory.readbyte(53612)+memory.readbyte(53613)
+			maxhp = 128*memory.readbyte(53645)+memory.readbyte(53646)
+			gui.text(0,288,"Pokemon: "..POKEMON[currpokemon].." Level "..currlevel)
+			if currlevel < 100 then
+				currexp = memory.readbyte(53625)*256*256 + memory.readbyte(53626)*256 + memory.readbyte(53627)
+				tonextlevel = math.floor(6/5 * (currlevel+1)^3 - 15*(currlevel+1)^2 + 100*(currlevel+1) - 140)
+				gui.text(0,288+16,"HP: "..currhp.."/"..maxhp..", EXP:"..currexp.."/"..tonextlevel)
+			else
+				gui.text(0,288+16,"HP: "..currhp.."/"..maxhp)
+			end
 		end
 	end
 	emu.frameadvance()
