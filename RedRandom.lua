@@ -10,10 +10,6 @@ function update_buttons()
 	local temp_file = io.open(temp_name,"w")
 	io.input(buttons_file)
 	io.output(temp_file)
-	io.read("*line")
-	io.write(frame.."\n") -- Write new frame
-	io.read("*line")
-	io.write(random_seed[1].." "..random_seed[2].." "..random_seed[3].."\n") -- Write new random seed
 	for i=1,8 do
 		local get = io.read("*line") + new_buttons[i]
 		io.write(get.."\n")
@@ -27,7 +23,7 @@ function transfer_buttons(from_name,to_name)
 	local to_file = io.open(to_name,"w")
 	io.input(from_file)
 	io.output(to_file)
-	for i=1,10 do
+	for i=1,8 do
 		io.write((io.read("*line")).."\n")
 	end
 	from_file:close()
@@ -36,8 +32,6 @@ end
 function save_new_buttons(buttons_array)
 	local buttons_file = io.open(buttons_name,"w")
 	io.output(buttons_file)
-	io.write(frame.."\n")
-	io.write(random_seed[1].." "..random_seed[2].." "..random_seed[3].."\n")
 	for n=1,8 do
 		io.write(buttons_array[n].."\n")
 	end
@@ -50,8 +44,6 @@ end
 function save_new_positions(positions_array)
 	local positions_file = io.open(positions_name,"w")
 	io.output(positions_file)
-	io.write(frame.."\n")
-	io.write(random_seed[1].." "..random_seed[2].." "..random_seed[3].."\n")
 	io.write(#positions_array.."\n")
 	for i=1,#positions_array do
 		io.write(positions_array[i][1].." "..positions_array[i][2].." "..positions_array[i][3].." "..positions_array[i][4].."\n")
@@ -63,8 +55,6 @@ function transfer_positions(from_name,to_name,length)
 	local to_file = io.open(to_name,"w")
 	io.input(from_file)
 	io.output(to_file)
-	io.write((io.read("*line")).."\n") -- read and write frame
-	io.write((io.read("*line")).."\n") -- read and write random seed
 	-- Note: The transfer_positions function is only used in the function update_positions. 
 	-- That function creates a half-finished positions file with no length indicator - that is stored and changed locally. 
 	-- A proper transfer_positions function may be added later.
@@ -95,10 +85,6 @@ function update_positions()
 	local temp_file = io.open(temp_name,"w")
 	io.input(positions_file)
 	io.output(temp_file)
-	io.read("*line")
-	io.write(frame.."\n")
-	io.read("*line")
-	io.write(random_seed[1].." "..random_seed[2].." "..random_seed[3].."\n")
 	local read_length = io.read("*line")
 	for i=1,read_length do
 		read_position = {io.read("*number"),io.read("*number"),io.read("*number")}
@@ -126,8 +112,6 @@ end
 function sort_positions()
 	local positions_file = io.open(positions_name,"r")
 	io.input(positions_file)
-	local read_frame = io.read("*line")
-	local read_seed = io.read("*line")
 	local read_number = io.read("*line")
 	local read_positions = {}
 	for i=1,read_number do
@@ -193,7 +177,6 @@ function load_info()
 	info_file:close()
 end
 
-
 function create_new_events_file()
 	local events_file = io.open(events_name,"w")
 	events_file:close()
@@ -230,39 +213,17 @@ function update_events_variable()
 	end
 end
 
-function set_joypad_button(in_button)
-	if in_button == 1 then
-		joypad.set({Up=true,Down=false,Left=false,Right=false,Start=false,Select=false,A=false,B=false,Power=false})
-		return
-	end
-	if in_button == 2 then
-		joypad.set({Up=false,Down=true,Left=false,Right=false,Start=false,Select=false,A=false,B=false,Power=false})
-		return
-	end
-	if in_button == 3 then
-		joypad.set({Up=false,Down=false,Left=true,Right=false,Start=false,Select=false,A=false,B=false,Power=false})
-		return
-	end
-	if in_button == 4 then
-		joypad.set({Up=false,Down=false,Left=false,Right=true,Start=false,Select=false,A=false,B=false,Power=false})
-		return
-	end
-	if in_button == 5 then
-		joypad.set({Up=false,Down=false,Left=false,Right=false,Start=true,Select=false,A=false,B=false,Power=false})
-		return
-	end
-	if in_button == 6 then
-		joypad.set({Up=false,Down=false,Left=false,Right=false,Start=false,Select=true,A=false,B=false,Power=false})
-		return
-	end
-	if in_button == 7 then
-		joypad.set({Up=false,Down=false,Left=false,Right=false,Start=false,Select=false,A=true,B=false,Power=false})
-		return
-	end
-	if in_button == 8 then
-		joypad.set({Up=false,Down=false,Left=false,Right=false,Start=false,Select=false,A=false,B=true,Power=false})
-		return
-	end
+
+function set_joypad_from_string(mnemonic)
+	joypad.set({Up =     string.sub(mnemonic,1,1) == "U",
+							Down =   string.sub(mnemonic,2,2) == "D",
+							Left =   string.sub(mnemonic,3,3) == "L",
+							Right =  string.sub(mnemonic,4,4) == "R",
+							Start =  string.sub(mnemonic,5,5) == "S",
+							Select = string.sub(mnemonic,6,6) == "s",
+							B =      string.sub(mnemonic,7,7) == "B",
+							A =      string.sub(mnemonic,8,8) == "A",
+							Power =  string.sub(mnemonic,9,9) == "P"})
 end
 function set_random_button() -- Wichmann-Hill PRNG, because it's easy.
 	random_seed[1] = (171*random_seed[1])%30269
@@ -271,8 +232,7 @@ function set_random_button() -- Wichmann-Hill PRNG, because it's easy.
 	local rand_result = (random_seed[1]/30269 + random_seed[2]/30307 + random_seed[3]/30323)%1
 	button = math.floor(rand_result*8 + 1)
 	in_string = BUTTONS[button]
-	set_joypad_button(button)
-	--joypad.setfrommnemonicstr(in_string)
+	set_joypad_from_string(in_string)
 end
 function update_variables()
 	current_map = memory.readbyte(54110)
@@ -288,6 +248,7 @@ function update_variables()
 	end
 end
 function update_savefiles()
+	save_info()
 	if save_buttons then
 		update_buttons()
 	end
@@ -346,11 +307,11 @@ function initialize_savefiles()
 	save_info()
 end
 function check_end_conditions() -- returns true if program should stop
-	if frame == end_frame then
+	if (not endless) and (frame >= end_frame) then
 		print("Ending frame reached")
 		return true
 	end
-	if end_condition == "parcel" then
+	if end_condition["parcel"] ~= nil then
 	 	if (memory.readbyte(54797) ~= 0) then
 			print("Oak's Parcel received")
 			return true
@@ -387,13 +348,14 @@ end
 
 ---- VARIABLES TO EDIT FOR EACH RUN ----
 end_frame = -1 -- Frame to end on. If this frame is passed over (less than the beginning frame) then it will never stop.
-end_condition = "parcel" -- Set alternative end condition. If it doesn't exist, then there is no alternative end condition. "parcel" for when Oak Parcel is obtained for the first time.
+endless = true
+end_condition = {"parcel"} -- Set alternative end condition. If it doesn't exist, then there is no alternative end condition. "parcel" for when Oak Parcel is obtained for the first time.
 
 update_multiple = 1000 -- How many frames before each update to save files.
 save_file_name = "RedRandom" -- Identifies each run.
 start_new = true -- Set to false if continuing a run (Will start a new run if no savefiles detected). Set to true if starting a new run with the same name.
 sort_files = true -- Set to true to sort the save files. Here so that if anything goes horribly wrong I can turn it off.
-max_events = 10
+max_events = 5
 
 -- Note: These settings will not change if you have a saved file.
 starting_random_seed = {1,1,1} -- Should be three random integers from 1 to 30000.
