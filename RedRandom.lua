@@ -503,7 +503,6 @@ while true do
 			initialize()
 		end
 		if frame%update_multiple == 0 and emu.framecount() ~= 0 then
-			print(frame)
 			savestate.save(savestate_name)
 			update_savefiles()
 		end
