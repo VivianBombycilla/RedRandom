@@ -140,8 +140,8 @@ function save_info()
 	else
 		io.write("0".."\n")
 	end
-	if load_events then
-		io.write("1".."\n")
+	if log_events then
+		io.write("1".." "..max_events.."\n")
 	else
 		io.write("0".."\n")
 	end
@@ -168,6 +168,7 @@ function load_info()
 	end
 	if log_events == 1 then
 		log_events = true
+		max_events = io.read("*number")
 	else
 		log_events = false
 	end
@@ -179,6 +180,8 @@ end
 
 function create_new_events_file()
 	local events_file = io.open(events_name,"w")
+	io.output(events_file)
+	io.write("\n")
 	events_file:close()
 end
 function create_events_file(events_array)
@@ -273,8 +276,8 @@ function try_opening_savefiles()
 	
 end
 function try_opening_important_files()
-	local settings_file = io.open(settings_name,"r")
-	settings_file:close()
+	local info_file = io.open(info_name,"r")
+	info_file:close()
 	local savestate_file = io.open(savestate_name,"r")
 	savestate_file:close()
 end
@@ -303,15 +306,18 @@ function initialize_savefiles()
 	end
 	if log_events then
 		create_new_events_file()
+		new_events = {}
 	end
 	save_info()
 end
 function check_end_conditions() -- returns true if program should stop
-	if (not endless) and (frame >= end_frame) then
-		print("Ending frame reached")
-		return true
+	if (not endless) then
+		if (frame >= end_frame) then
+			print("Ending frame reached")
+			return true
+		end
 	end
-	if end_condition["parcel"] ~= nil then
+	if end_conditions["parcel"] ~= nil then
 	 	if (memory.readbyte(54797) ~= 0) then
 			print("Oak's Parcel received")
 			return true
@@ -328,41 +334,157 @@ function initialize()
 	if tastudio.engaged() then
 		error("Close TASStudio!")
 	end
-	if (not start_new and pcall(try_opening_important_files)) then
+	if not start_new then
+		if not pcall(try_opening_important_files) then
+			error("Savefiles missing!")
+		end
 		load_info()
 		if pcall(try_opening_savefiles) then
 			savestate.load(savestate_name)
+			print("Loaded save file! Name: "..save_file_name)
+			print("Beginning to play!")
 			return
 		else 
-			error("Save files corrupted :(")
+			error("Savefiles missing!")
 		end
+	else
+		savestate.load("Savestates/blank.state")
+		print("Initializing savefiles!")
+		initialize_savefiles()
+		savestate.save(savestate_name)
 	end
-	
-	-- Start new
-	savestate.load("Savestates/blank.state")
-	print("Initializing savefiles!")
-	random_seed = starting_random_seed
-	initialize_savefiles()
-	savestate.save(savestate_name)
+	print("Beginning to play!")
 end
 
----- VARIABLES TO EDIT FOR EACH RUN ----
-end_frame = -1 -- Frame to end on. If this frame is passed over (less than the beginning frame) then it will never stop.
-endless = true
-end_condition = {"parcel"} -- Set alternative end condition. If it doesn't exist, then there is no alternative end condition. "parcel" for when Oak Parcel is obtained for the first time.
+function continue_save_button()
+	if forms.gettext(form_ids["savefile"]) == "" then
+		print("No savefile name!")
+		return
+	else
+		-- To add: 
+		save_file_name = forms.gettext(form_ids["savefile"])
+	end
+	if forms.gettext(form_ids["update multiple"]) == "" or 
+		 forms.gettext(form_ids["update multiple"]) == 0  then
+		print("Invalid update multiple!")
+		return
+	else
+		update_multiple = forms.gettext(form_ids["update multiple"])
+	end
+	if forms.ischecked(form_ids["endless"]) then	
+		endless = true
+	else
+		endless = false
+		if forms.gettext(form_ids["end frame"]) == "" then
+			print("Invalid end frame!")
+			return
+		else
+			end_frame = forms.gettext(form_ids["end frame"])
+		end
+	end
+	end_conditions = {}
+	if forms.ischecked(form_ids["parcel"]) then
+		table.insert(end_conditions,"parcel")
+	end
+	start_new = false
+	forms.destroyall()
+	ready = true
+end
+function new_save_button()
+	if forms.gettext(form_ids["savefile"]) == "" then
+		print("No savefile name!")
+		return
+	else
+		save_file_name = forms.gettext(form_ids["savefile"])
+	end
+	if forms.gettext(form_ids["update multiple"]) == "" or 
+		 forms.gettext(form_ids["update multiple"]) == 0  then
+		print("Invalid update multiple!")
+		return
+	else
+		update_multiple = forms.gettext(form_ids["update multiple"])
+	end
+	if forms.ischecked(form_ids["endless"]) then	
+		endless = true
+	else
+		endless = false
+		if forms.gettext(form_ids["end frame"]) == "" then
+			print("Invalid end frame!")
+			return
+		else
+			end_frame = forms.gettext(form_ids["end frame"])
+		end
+	end
+	end_conditions = {}
+	if forms.ischecked(form_ids["parcel"]) then
+		table.insert(end_conditions,"parcel")
+	end
+	if forms.gettext(form_ids["seed 1"]) == "" or forms.gettext(form_ids["seed 2"]) == "" or forms.gettext(form_ids["seed 3"]) == "" then
+		print("Random seed missing!")
+		return
+	elseif tonumber(forms.gettext(form_ids["seed 1"])) == 0    or 
+				 tonumber(forms.gettext(form_ids["seed 2"])) == 0    or 
+				 tonumber(forms.gettext(form_ids["seed 3"])) == 0    or
+				 tonumber(forms.gettext(form_ids["seed 1"])) > 30000 or 
+				 tonumber(forms.gettext(form_ids["seed 2"])) > 30000 or 
+				 tonumber(forms.gettext(form_ids["seed 3"])) > 30000 then
+		print("Random seeds must be between 1 and 30000!")
+		return
+	else
+		random_seed = {tonumber(forms.gettext(form_ids["seed 1"])),tonumber(forms.gettext(form_ids["seed 2"])),tonumber(forms.gettext(form_ids["seed 3"]))}
+	end
+	if forms.ischecked(form_ids["buttons"]) then
+		save_buttons = true
+	else
+		save_buttons = false
+	end
+	if forms.ischecked(form_ids["positions"]) then
+		save_positions = true
+	else
+		save_positions = false
+	end
+	if forms.ischecked(form_ids["events"]) then
+		log_events = true
+		if forms.gettext(form_ids["max events"]) == "" then
+			print("Invalid max events!")
+			return
+		else
+			max_events = forms.gettext(form_ids["max events"])
+		end
+	else
+		log_events = false
+	end
+	start_new = true
+	forms.destroyall()
+	ready = true
+end
+function create_form()
+	form_ids = {}
+	test_form = forms.newform(280,210,"RedRandom")
 
-update_multiple = 1000 -- How many frames before each update to save files.
-save_file_name = "RedRandom" -- Identifies each run.
-start_new = true -- Set to false if continuing a run (Will start a new run if no savefiles detected). Set to true if starting a new run with the same name.
-sort_files = true -- Set to true to sort the save files. Here so that if anything goes horribly wrong I can turn it off.
-max_events = 5
+	form_ids["savefile"] = forms.textbox(test_form,nil,140,20,nil,76,0)
+	forms.label(test_form,"Savefile name:",0,2,80,18)
+	form_ids["update multiple"] = forms.textbox(test_form,3600,54,20,"UNSIGNED",82,20)
+	forms.label(test_form,"Update multiple:",0,22,140,18)
+	form_ids["end frame"] = forms.textbox(test_form,216000,60,20,"UNSIGNED",60,40)
+	forms.label(test_form,"End frame:",0,42,60,18)
+	form_ids["endless"] = forms.checkbox(test_form,"Endless",140,42)
+	forms.label(test_form,"End conditions:",0,62,80,18)
+	form_ids["parcel"] = forms.checkbox(test_form,"Parcel",80,62)
+	forms.button(test_form,"Continue save",continue_save_button,0,80,100,20)
 
--- Note: These settings will not change if you have a saved file.
-starting_random_seed = {1,1,1} -- Should be three random integers from 1 to 30000.
-save_buttons = true
-save_positions = true
-log_events = true
-
+	forms.label(test_form,"Starting Random Seed:",0,102,120,20)
+	form_ids["seed 1"] = forms.textbox(test_form,nil,35,20,"UNSIGNED",120,100)
+	form_ids["seed 2"] = forms.textbox(test_form,nil,35,20,"UNSIGNED",156,100)
+	form_ids["seed 3"] = forms.textbox(test_form,nil,35,20,"UNSIGNED",192,100)
+	forms.label(test_form,"Track:",0,122,35,18)
+	form_ids["buttons"] = forms.checkbox(test_form,"Buttons",35,122)
+	form_ids["positions"] = forms.checkbox(test_form,"Positions",110,122)
+	form_ids["events"] = forms.checkbox(test_form,"Events",190,122)
+	forms.label(test_form,"(How many?)",160,142,73,20)
+	form_ids["max events"] = forms.textbox(test_form,nil,20,20,"UNSIGNED",235,140)
+	forms.button(test_form,"New save",new_save_button,0,150,100,20)
+end
 
 ---- STATIC VARIABLES ----
 BUTTONS = {"U........",".D.......","..L......","...R.....","....S....",".....s...","......B..",".......A."}
@@ -371,23 +493,29 @@ BUTTONS = {"U........",".D.......","..L......","...R.....","....S....",".....s..
 -- INITIALIZATION --
 console.clear()
 print("--RedRandom by Vivian--")
-initialize()
-print("Beginning to play!")
+ready = false
+create_form()
+frame = 0
 -- MAIN LOOP --
 while true do
-	if frame%update_multiple == 0 and emu.framecount() ~= 0 then
-		savestate.save(savestate_name)
-		update_savefiles()
+	if ready then
+		if frame == 0 then
+			initialize()
+		end
+		if frame%update_multiple == 0 and emu.framecount() ~= 0 then
+			print(frame)
+			savestate.save(savestate_name)
+			update_savefiles()
+		end
+		if check_end_conditions() then
+			break
+		end
+		set_random_button()
+		update_variables()
+		frame = frame + 1
 	end
-	if check_end_conditions() then
-		break
-	end
-	set_random_button()
-	update_variables()
 	emu.frameadvance()
-	frame = frame + 1
 end
-
 -- ENDING --
 client.pause()
 print("Program Ending.")
