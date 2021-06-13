@@ -69,8 +69,8 @@ function update_positions_variable()
 	local found = false
 	for i=1,#new_positions do
 		if (new_positions[i][1] == current_position[1]) and 
-		(new_positions[i][2] == current_position[2]) and 
-		(new_positions[i][3] == current_position[3]) then
+	  (new_positions[i][2] == current_position[2]) and 
+	  (new_positions[i][3] == current_position[3]) then
 			new_positions[i][4] = new_positions[i][4] + 1
 			found = true
 			break
@@ -91,8 +91,8 @@ function update_positions()
 		read_position_frames = io.read("*number")
 		for j=1,#new_positions do
 			if (read_position[1] == new_positions[j][1]) and 
-			(read_position[2] == new_positions[j][2]) and 
-			(read_position[3] == new_positions[j][3]) then
+	    (read_position[2] == new_positions[j][2]) and 
+	    (read_position[3] == new_positions[j][3]) then
 				read_position_frames = read_position_frames + new_positions[j][4]
 				table.remove(new_positions,j)
 				break
@@ -217,14 +217,14 @@ end
 
 function set_joypad_from_string(mnemonic)
 	joypad.set({Up =     string.sub(mnemonic,1,1) == "U",
-							Down =   string.sub(mnemonic,2,2) == "D",
-							Left =   string.sub(mnemonic,3,3) == "L",
-							Right =  string.sub(mnemonic,4,4) == "R",
-							Start =  string.sub(mnemonic,5,5) == "S",
-							Select = string.sub(mnemonic,6,6) == "s",
-							B =      string.sub(mnemonic,7,7) == "B",
-							A =      string.sub(mnemonic,8,8) == "A",
-							Power =  string.sub(mnemonic,9,9) == "P"})
+	            Down =   string.sub(mnemonic,2,2) == "D",
+	            Left =   string.sub(mnemonic,3,3) == "L",
+	            Right =  string.sub(mnemonic,4,4) == "R",
+	            Start =  string.sub(mnemonic,5,5) == "S",
+	            Select = string.sub(mnemonic,6,6) == "s",
+	            B =      string.sub(mnemonic,7,7) == "B",
+	            A =      string.sub(mnemonic,8,8) == "A",
+	            Power =  string.sub(mnemonic,9,9) == "P"})
 end
 function set_random_button() -- Wichmann-Hill PRNG, because it's easy.
 	random_seed[1] = (171*random_seed[1])%30269
@@ -362,7 +362,7 @@ function continue_save_button()
 		save_file_name = forms.gettext(form_ids["savefile"])
 	end
 	if forms.gettext(form_ids["update multiple"]) == "" or 
-		 forms.gettext(form_ids["update multiple"]) == 0  then
+	   forms.gettext(form_ids["update multiple"]) == 0  then
 		print("Invalid update multiple!")
 		return
 	else
