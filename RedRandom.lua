@@ -129,6 +129,7 @@ function save_info()
 	local info_file = io.open(info_name,"w")
 	io.output(info_file)
 	io.write(frame.."\n")
+	io.write(starting_random_seed[1].." "..starting_random_seed[2].." "..starting_random_seed[3].."\n")
 	io.write(random_seed[1].." "..random_seed[2].." "..random_seed[3].."\n")
 	if save_buttons then
 		io.write("1".."\n")
@@ -136,43 +137,37 @@ function save_info()
 		io.write("0".."\n")
 	end
 	if save_positions then
-		io.write("1".."\n")
+		io.write("1 ")
+		if do_sort_positions then
+			io.write("1\n")
+		else
+			io.write("0\n")
+		end
 	else
 		io.write("0".."\n")
 	end
 	if log_events then
-		io.write("1".." "..max_events.."\n")
+		io.write("1 "..max_events.." "..io.write(current_map or memory.readbyte(54110)).."\n")
 	else
 		io.write("0".."\n")
 	end
-	io.write(current_map or memory.readbyte(54110))
+	
 	info_file:close()
 end
 function load_info()
 	local info_file = io.open(info_name,"r")
 	io.input(info_file)
 	frame = io.read("*number")
+	starting_random_seed = {io.read("*number"),io.read("*number"),io.read("*number")}
 	random_seed = {io.read("*number"),io.read("*number"),io.read("*number")}
-	save_buttons   = io.read("*number")
-	save_positions = io.read("*number")
-	log_events     = io.read("*number")
-	if save_buttons == 1 then
-		save_buttons = true
-	else
-		save_buttons = false
+	save_buttons   = io.read("*number") == 1
+	save_positions = io.read("*number") == 1
+	if save_positions then
+		do_sort_positions = io.read("*number") == 1
 	end
-	if save_positions == 1 then
-		save_positions = true
-	else
-		save_positions = false
-	end
-	if log_events == 1 then
-		log_events = true
-		max_events = io.read("*number")
-	else
-		log_events = false
-	end
+	log_events = io.read("*number") == 1
 	if log_events then
+		max_events = io.read("*number")
 		new_events["map"] = io.read("*number")
 	end
 	info_file:close()
@@ -190,7 +185,7 @@ function create_events_file(events_array)
 	for i=1,#events_array do
 		io.write(events_array[i].."\n")
 	end
-	for i=1,5-#events_array do
+	for i=1,max_events-#events_array do
 		io.write(" ".."\n")
 	end
 	events_file:close()
@@ -198,24 +193,27 @@ end
 function load_events()
 	local events_file = io.open(events_name,"r")
 	io.input(events_file)
-	for i=1,5 do
+	for i=1,max_events do
 		local line = io.read("*line")
 		if line == " " then
 			break
 		end
 		new_events[i] = line
-	end	
+	end
 	events_file:close()
 end
 function update_events_variable()
 	if new_events["map"] ~= current_map then
 		new_events["map"] = current_map
-		table.insert(new_events,1,frame..": Entered map "..current_map)
+		if MAPS[current_map] == nil then
+			table.insert(new_events,1,frame..": Entered map "..current_map)
+		else
+			table.insert(new_events,1,frame..": Entered "..MAPS[current_map])
+		end
 		table.remove(new_events,max_events+1)
 		create_events_file(new_events)
 	end
 end
-
 
 function set_joypad_from_string(mnemonic)
 	joypad.set({Up =     string.sub(mnemonic,1,1) == "U",
@@ -258,7 +256,7 @@ function update_savefiles()
 	if save_positions then
 		update_positions()
 	end
-	if sort_files then
+	if do_sort_positions then
 		sort_positions()
 	end
 	create_new_update_variables()
@@ -361,7 +359,6 @@ function continue_save_button()
 		print("No savefile name!")
 		return
 	else
-		-- To add: 
 		save_file_name = forms.gettext(form_ids["savefile"])
 	end
 	if forms.gettext(form_ids["update multiple"]) == "" or 
@@ -431,7 +428,8 @@ function new_save_button()
 		print("Random seeds must be between 1 and 30000!")
 		return
 	else
-		random_seed = {tonumber(forms.gettext(form_ids["seed 1"])),tonumber(forms.gettext(form_ids["seed 2"])),tonumber(forms.gettext(form_ids["seed 3"]))}
+		starting_random_seed = {tonumber(forms.gettext(form_ids["seed 1"])),tonumber(forms.gettext(form_ids["seed 2"])),tonumber(forms.gettext(form_ids["seed 3"]))}
+		random_seed = {starting_random_seed[1],starting_random_seed[2],starting_random_seed[3]}
 	end
 	if forms.ischecked(form_ids["buttons"]) then
 		save_buttons = true
@@ -440,6 +438,7 @@ function new_save_button()
 	end
 	if forms.ischecked(form_ids["positions"]) then
 		save_positions = true
+		do_sort_positions = forms.ischecked(form_ids["sort positions"])
 	else
 		save_positions = false
 	end
@@ -461,33 +460,46 @@ end
 function create_form()
 	form_ids = {}
 	test_form = forms.newform(280,210,"RedRandom")
-
-	form_ids["savefile"] = forms.textbox(test_form,nil,140,20,nil,76,0)
 	forms.label(test_form,"Savefile name:",0,2,80,18)
-	form_ids["update multiple"] = forms.textbox(test_form,3600,54,20,"UNSIGNED",82,20)
 	forms.label(test_form,"Update multiple:",0,22,140,18)
-	form_ids["end frame"] = forms.textbox(test_form,216000,60,20,"UNSIGNED",60,40)
 	forms.label(test_form,"End frame:",0,42,60,18)
-	form_ids["endless"] = forms.checkbox(test_form,"Endless",140,42)
 	forms.label(test_form,"End conditions:",0,62,80,18)
-	form_ids["parcel"] = forms.checkbox(test_form,"Parcel",80,62)
-	forms.button(test_form,"Continue save",continue_save_button,0,80,100,20)
-
-	forms.label(test_form,"Starting Random Seed:",0,102,120,20)
-	form_ids["seed 1"] = forms.textbox(test_form,nil,35,20,"UNSIGNED",120,100)
-	form_ids["seed 2"] = forms.textbox(test_form,nil,35,20,"UNSIGNED",156,100)
-	form_ids["seed 3"] = forms.textbox(test_form,nil,35,20,"UNSIGNED",192,100)
+	forms.label(test_form,"Starting Random Seed:",0,102,120,18)
 	forms.label(test_form,"Track:",0,122,35,18)
-	form_ids["buttons"] = forms.checkbox(test_form,"Buttons",35,122)
-	form_ids["positions"] = forms.checkbox(test_form,"Positions",110,122)
-	form_ids["events"] = forms.checkbox(test_form,"Events",190,122)
-	forms.label(test_form,"(How many?)",160,142,73,20)
-	form_ids["max events"] = forms.textbox(test_form,nil,20,20,"UNSIGNED",235,140)
+	forms.label(test_form,"# of events",180,142,58,18)
+	
+	form_ids["savefile"]        = forms.textbox(test_form,nil,140,20,nil,76,0)
+	form_ids["update multiple"] = forms.textbox(test_form,3600,54,20,"UNSIGNED",82,20)
+	form_ids["end frame"]       = forms.textbox(test_form,216000,60,20,"UNSIGNED",60,40)
+	form_ids["endless"]         = forms.checkbox(test_form,"Endless",140,42)
+	form_ids["parcel"]          = forms.checkbox(test_form,"Parcel",80,62)
+	form_ids["seed 1"]          = forms.textbox(test_form,nil,35,20,"UNSIGNED",120,100)
+	form_ids["seed 2"]          = forms.textbox(test_form,nil,35,20,"UNSIGNED",156,100)
+	form_ids["seed 3"]          = forms.textbox(test_form,nil,35,20,"UNSIGNED",192,100)
+	form_ids["buttons"]         = forms.checkbox(test_form,"Buttons",35,122)
+	form_ids["positions"]       = forms.checkbox(test_form,"Positions",110,122)
+	form_ids["sort positions"]  = forms.checkbox(test_form,"Sort?",110,142)
+	form_ids["events"]          = forms.checkbox(test_form,"Events",190,122)
+	form_ids["max events"]      = forms.textbox(test_form,nil,18,20,"UNSIGNED",238,140)
+	
+	forms.button(test_form,"Continue save",continue_save_button,0,80,100,20)
 	forms.button(test_form,"New save",new_save_button,0,150,100,20)
 end
 
 ---- STATIC VARIABLES ----
 BUTTONS = {"U........",".D.......","..L......","...R.....","....S....",".....s...","......B..",".......A."}
+MAPS = {}
+MAPS[0] = "Pallet Town"
+MAPS[1] = "Viridian City"
+MAPS[12] = "Route 1"
+MAPS[37] = "Red's House 1F"
+MAPS[38] = "Red's House 2F"
+MAPS[39] = "Blue's House"
+MAPS[40] = "Professor Oak's Lab"
+MAPS[41] = "Viridian Pokémon Center"
+MAPS[42] = "Viridian Poké Mart"
+MAPS[43] = "Trainers' School"
+MAPS[44] = "Viridian House 1"
 
 ---- MAIN ----
 -- INITIALIZATION --
