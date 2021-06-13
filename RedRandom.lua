@@ -69,8 +69,8 @@ function update_positions_variable()
 	local found = false
 	for i=1,#new_positions do
 		if (new_positions[i][1] == current_position[1]) and 
-	  (new_positions[i][2] == current_position[2]) and 
-	  (new_positions[i][3] == current_position[3]) then
+		(new_positions[i][2] == current_position[2]) and 
+		(new_positions[i][3] == current_position[3]) then
 			new_positions[i][4] = new_positions[i][4] + 1
 			found = true
 			break
@@ -91,8 +91,8 @@ function update_positions()
 		read_position_frames = io.read("*number")
 		for j=1,#new_positions do
 			if (read_position[1] == new_positions[j][1]) and 
-	    (read_position[2] == new_positions[j][2]) and 
-	    (read_position[3] == new_positions[j][3]) then
+			(read_position[2] == new_positions[j][2]) and 
+			(read_position[3] == new_positions[j][3]) then
 				read_position_frames = read_position_frames + new_positions[j][4]
 				table.remove(new_positions,j)
 				break
