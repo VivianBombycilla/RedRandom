@@ -395,7 +395,7 @@ function new_save_button()
 		save_file_name = forms.gettext(form_ids["savefile"])
 	end
 	if forms.gettext(form_ids["update multiple"]) == "" or 
-		 forms.gettext(form_ids["update multiple"]) == 0  then
+	   forms.gettext(form_ids["update multiple"]) == 0  then
 		print("Invalid update multiple!")
 		return
 	else
@@ -420,11 +420,11 @@ function new_save_button()
 		print("Random seed missing!")
 		return
 	elseif tonumber(forms.gettext(form_ids["seed 1"])) == 0    or 
-				 tonumber(forms.gettext(form_ids["seed 2"])) == 0    or 
-				 tonumber(forms.gettext(form_ids["seed 3"])) == 0    or
-				 tonumber(forms.gettext(form_ids["seed 1"])) > 30000 or 
-				 tonumber(forms.gettext(form_ids["seed 2"])) > 30000 or 
-				 tonumber(forms.gettext(form_ids["seed 3"])) > 30000 then
+	       tonumber(forms.gettext(form_ids["seed 2"])) == 0    or 
+	       tonumber(forms.gettext(form_ids["seed 3"])) == 0    or
+	       tonumber(forms.gettext(form_ids["seed 1"])) > 30000 or 
+	       tonumber(forms.gettext(form_ids["seed 2"])) > 30000 or 
+	       tonumber(forms.gettext(form_ids["seed 3"])) > 30000 then
 		print("Random seeds must be between 1 and 30000!")
 		return
 	else
