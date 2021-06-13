@@ -136,8 +136,6 @@ end
 function positions_gradient()
 	local positions_file = io.open(positions_name,"r")
 	io.input(positions_file)
-	pgradient_frame = io.read("*line")
-	io.read("*line")
 	local read_number = io.read("*line")
 	if POSITION_GRADIENT_MODE == "rank" then
 		for i=1,read_number do

@@ -205,10 +205,10 @@ end
 function update_events_variable()
 	if new_events["map"] ~= current_map then
 		new_events["map"] = current_map
-		if MAPS[current_map] == nil then
+		if MAP_NAMES[current_map] == nil then
 			table.insert(new_events,1,frame..": Entered map "..current_map)
 		else
-			table.insert(new_events,1,frame..": Entered "..MAPS[current_map])
+			table.insert(new_events,1,frame..": Entered "..MAP_NAMES[current_map])
 		end
 		table.remove(new_events,max_events+1)
 		create_events_file(new_events)
@@ -488,18 +488,18 @@ end
 
 ---- STATIC VARIABLES ----
 BUTTONS = {"U........",".D.......","..L......","...R.....","....S....",".....s...","......B..",".......A."}
-MAPS = {}
-MAPS[0] = "Pallet Town"
-MAPS[1] = "Viridian City"
-MAPS[12] = "Route 1"
-MAPS[37] = "Red's House 1F"
-MAPS[38] = "Red's House 2F"
-MAPS[39] = "Blue's House"
-MAPS[40] = "Professor Oak's Lab"
-MAPS[41] = "Viridian Pokémon Center"
-MAPS[42] = "Viridian Poké Mart"
-MAPS[43] = "Trainers' School"
-MAPS[44] = "Viridian House 1"
+MAP_NAMES = {}
+MAP_NAMES[0] = "Pallet Town"
+MAP_NAMES[1] = "Viridian City"
+MAP_NAMES[12] = "Route 1"
+MAP_NAMES[37] = "Red's House 1F"
+MAP_NAMES[38] = "Red's House 2F"
+MAP_NAMES[39] = "Blue's House"
+MAP_NAMES[40] = "Professor Oak's Lab"
+MAP_NAMES[41] = "Viridian Pokémon Center"
+MAP_NAMES[42] = "Viridian Poké Mart"
+MAP_NAMES[43] = "Trainers' School"
+MAP_NAMES[44] = "Viridian House 1"
 
 ---- MAIN ----
 -- INITIALIZATION --
