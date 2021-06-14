@@ -147,7 +147,7 @@ function save_info()
 		io.write("0".."\n")
 	end
 	if log_events then
-		io.write("1 "..max_events.." "..io.write(current_map or memory.readbyte(54110)).."\n")
+		io.write("1 "..max_events.." "..(current_map or memory.readbyte(54110)).."\n")
 	else
 		io.write("0".."\n")
 	end
@@ -171,6 +171,44 @@ function load_info()
 		new_events["map"] = io.read("*number")
 	end
 	info_file:close()
+end
+function print_info()
+	print("Savefile name: "..save_file_name)
+	print("Starting random seed: {"..starting_random_seed[1]..", "..starting_random_seed[2]..", "..starting_random_seed[3].."}")
+	if endless then
+		print("No ending frame.")
+	else
+		print("End frame: "..end_frame)
+	end
+	print("Update multiple: "..update_multiple)
+	if save_buttons or save_positions or log_events then
+		local temp_str = "Saving: "
+		local temp_bool = false
+		if save_buttons then
+			temp_str = temp_str.."Buttons"
+			temp_bool = true
+		end
+		if save_positions then
+			if temp_bool then temp_str = temp_str..", " end
+			temp_str = temp_str.."Positions"
+			temp_bool = true
+		end
+		if save_positions then
+			if temp_bool then temp_str = temp_str..", " end
+			temp_str = temp_str.."Events"
+			temp_bool = true
+		end
+		print(temp_str)
+	else
+		print("Not saving files.")
+	end
+	if do_sort_positions then
+		print("Sorting positions file.")
+	end
+	if log_events then
+		print("Max events logged: "..max_events)
+	end
+	
 end
 
 function create_new_events_file()
@@ -339,9 +377,8 @@ function initialize()
 		load_info()
 		if pcall(try_opening_savefiles) then
 			savestate.load(savestate_name)
-			print("Loaded save file! Name: "..save_file_name)
-			print("Beginning to play!")
-			return
+			print("Loaded save file!")
+			print("Continuing save file!")
 		else 
 			error("Savefiles missing!")
 		end
@@ -350,9 +387,11 @@ function initialize()
 		print("Initializing savefiles!")
 		initialize_savefiles()
 		savestate.save(savestate_name)
+		print("Beginning new run!")
 	end
-	print("Beginning to play!")
+	print_info()
 end
+
 
 function continue_save_button()
 	if forms.gettext(form_ids["savefile"]) == "" then
@@ -376,7 +415,7 @@ function continue_save_button()
 			print("Invalid end frame!")
 			return
 		else
-			end_frame = forms.gettext(form_ids["end frame"])
+			end_frame = tonumber(forms.gettext(form_ids["end frame"]))
 		end
 	end
 	end_conditions = {}
@@ -409,7 +448,7 @@ function new_save_button()
 			print("Invalid end frame!")
 			return
 		else
-			end_frame = forms.gettext(form_ids["end frame"])
+			end_frame = tonumber(forms.gettext(form_ids["end frame"]))
 		end
 	end
 	end_conditions = {}
@@ -458,16 +497,8 @@ function new_save_button()
 	ready = true
 end
 function create_form()
-	form_ids = {}
 	test_form = forms.newform(280,210,"RedRandom")
-	forms.label(test_form,"Savefile name:",0,2,80,18)
-	forms.label(test_form,"Update multiple:",0,22,140,18)
-	forms.label(test_form,"End frame:",0,42,60,18)
-	forms.label(test_form,"End conditions:",0,62,80,18)
-	forms.label(test_form,"Starting Random Seed:",0,102,120,18)
-	forms.label(test_form,"Track:",0,122,35,18)
-	forms.label(test_form,"# of events",180,142,58,18)
-	
+	form_ids = {}
 	form_ids["savefile"]        = forms.textbox(test_form,nil,140,20,nil,76,0)
 	form_ids["update multiple"] = forms.textbox(test_form,3600,54,20,"UNSIGNED",82,20)
 	form_ids["end frame"]       = forms.textbox(test_form,216000,60,20,"UNSIGNED",60,40)
@@ -482,6 +513,17 @@ function create_form()
 	form_ids["events"]          = forms.checkbox(test_form,"Events",190,122)
 	form_ids["max events"]      = forms.textbox(test_form,nil,18,20,"UNSIGNED",238,140)
 	
+	
+	forms.label(test_form,"Savefile name:",0,2,80,18)
+	forms.label(test_form,"Update multiple:",0,22,140,18)
+	forms.label(test_form,"End frame:",0,42,60,18)
+	forms.label(test_form,"End conditions:",0,62,80,18)
+	forms.label(test_form,"Starting Random Seed:",0,102,120,18)
+	forms.label(test_form,"Track:",0,122,35,18)
+	forms.label(test_form,"# of events",180,142,58,18)
+	
+	
+	
 	forms.button(test_form,"Continue save",continue_save_button,0,80,100,20)
 	forms.button(test_form,"New save",new_save_button,0,150,100,20)
 end
@@ -489,8 +531,8 @@ end
 ---- STATIC VARIABLES ----
 BUTTONS = {"U........",".D.......","..L......","...R.....","....S....",".....s...","......B..",".......A."}
 MAP_NAMES = {}
-MAP_NAMES[0] = "Pallet Town"
-MAP_NAMES[1] = "Viridian City"
+MAP_NAMES[0]  = "Pallet Town"
+MAP_NAMES[1]  = "Viridian City"
 MAP_NAMES[12] = "Route 1"
 MAP_NAMES[37] = "Red's House 1F"
 MAP_NAMES[38] = "Red's House 2F"
