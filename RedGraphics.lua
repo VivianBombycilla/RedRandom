@@ -136,6 +136,7 @@ end
 function positions_gradient()
 	local positions_file = io.open(positions_name,"r")
 	io.input(positions_file)
+	io.read("*line")
 	local read_number = io.read("*line")
 	if POSITION_GRADIENT_MODE == "rank" then
 		for i=1,read_number do
@@ -164,9 +165,9 @@ end
 
 function color_gradient(min_color_array,max_color_array,max_value,value)
 	return to_color(math.floor(min_color_array[1]*value/max_value)+math.floor(max_color_array[1]*(max_value-value)/max_value),
-									math.floor(min_color_array[2]*value/max_value)+math.floor(max_color_array[2]*(max_value-value)/max_value),
-									math.floor(min_color_array[3]*value/max_value)+math.floor(max_color_array[3]*(max_value-value)/max_value),
-									math.floor(min_color_array[4]*value/max_value)+math.floor(max_color_array[4]*(max_value-value)/max_value))
+	                math.floor(min_color_array[2]*value/max_value)+math.floor(max_color_array[2]*(max_value-value)/max_value),
+	                math.floor(min_color_array[3]*value/max_value)+math.floor(max_color_array[3]*(max_value-value)/max_value),
+	                math.floor(min_color_array[4]*value/max_value)+math.floor(max_color_array[4]*(max_value-value)/max_value))
 end
 
 function to_color(AA,RR,GG,BB)
@@ -342,12 +343,195 @@ function create_graphics_variables()
 	POKEMON[188] = "Bellsprout"
 	POKEMON[189] = "Weepinbell"
 	POKEMON[190] = "Victreebel"
+	
+	MOVE_IDS = {}
+	MOVE_IDS[1] = "Pound"
+	MOVE_IDS[2] = "Karate Chop"
+	MOVE_IDS[3] = "Double Slap"
+	MOVE_IDS[4] = "Comet Punch"
+	MOVE_IDS[5] = "Mega Punch"
+	MOVE_IDS[6] = "Pay Day"
+	MOVE_IDS[7] = "Fire Punch"
+	MOVE_IDS[8] = "Ice Punch"
+	MOVE_IDS[9] = "Thunder Punch"
+	MOVE_IDS[10] = "Scratch"
+	MOVE_IDS[11] = "Vise Grip"
+	MOVE_IDS[12] = "Guillotine"
+	MOVE_IDS[13] = "Razor Wind"
+	MOVE_IDS[14] = "Swords Dance"
+	MOVE_IDS[15] = "Cut"
+	MOVE_IDS[16] = "Gust"
+	MOVE_IDS[17] = "Wing Attack"
+	MOVE_IDS[18] = "Whirlwind"
+	MOVE_IDS[19] = "Fly"
+	MOVE_IDS[20] = "Bind"
+	MOVE_IDS[21] = "Slam"
+	MOVE_IDS[22] = "Vine Whip"
+	MOVE_IDS[23] = "Stomp"
+	MOVE_IDS[24] = "Double Kick"
+	MOVE_IDS[25] = "Mega Kick"
+	MOVE_IDS[26] = "Jump Kick"
+	MOVE_IDS[27] = "Rolling Kick"
+	MOVE_IDS[28] = "Sand Attack"
+	MOVE_IDS[29] = "Headbutt"
+	MOVE_IDS[30] = "Horn Attack"
+	MOVE_IDS[31] = "Fury Attack"
+	MOVE_IDS[32] = "Horn Drill"
+	MOVE_IDS[33] = "Tackle"
+	MOVE_IDS[34] = "Body Slam"
+	MOVE_IDS[35] = "Wrap"
+	MOVE_IDS[36] = "Take Down"
+	MOVE_IDS[37] = "Thrash"
+	MOVE_IDS[38] = "Double-Edge"
+	MOVE_IDS[39] = "Tail Whip"
+	MOVE_IDS[40] = "Poison Sting"
+	MOVE_IDS[41] = "Twineedle"
+	MOVE_IDS[42] = "Pin Missile"
+	MOVE_IDS[43] = "Leer"
+	MOVE_IDS[44] = "Bite"
+	MOVE_IDS[45] = "Growl"
+	MOVE_IDS[46] = "Roar"
+	MOVE_IDS[47] = "Sing"
+	MOVE_IDS[48] = "Supersonic"
+	MOVE_IDS[49] = "Sonic Boom"
+	MOVE_IDS[50] = "Disable"
+	MOVE_IDS[51] = "Acid"
+	MOVE_IDS[52] = "Ember"
+	MOVE_IDS[53] = "Flamethrower"
+	MOVE_IDS[54] = "Mist"
+	MOVE_IDS[55] = "Water Gun"
+	MOVE_IDS[56] = "Hydro Pump"
+	MOVE_IDS[57] = "Surf"
+	MOVE_IDS[58] = "Ice Beam"
+	MOVE_IDS[59] = "Blizzard"
+	MOVE_IDS[60] = "Psybeam"
+	MOVE_IDS[61] = "Bubble Beam"
+	MOVE_IDS[62] = "Aurora Beam"
+	MOVE_IDS[63] = "Hyper Beam"
+	MOVE_IDS[64] = "Peck"
+	MOVE_IDS[65] = "Drill Peck"
+	MOVE_IDS[66] = "Submission"
+	MOVE_IDS[67] = "Low Kick"
+	MOVE_IDS[68] = "Counter"
+	MOVE_IDS[69] = "Seismic Toss"
+	MOVE_IDS[70] = "Strength"
+	MOVE_IDS[71] = "Absorb"
+	MOVE_IDS[72] = "Mega Drain"
+	MOVE_IDS[73] = "Leech Seed"
+	MOVE_IDS[74] = "Growth"
+	MOVE_IDS[75] = "Razor Leaf"
+	MOVE_IDS[76] = "Solar Beam"
+	MOVE_IDS[77] = "Poison Powder"
+	MOVE_IDS[78] = "Stun Spore"
+	MOVE_IDS[79] = "Sleep Powder"
+	MOVE_IDS[80] = "Petal Dance"
+	MOVE_IDS[81] = "String Shot"
+	MOVE_IDS[82] = "Dragon Rage"
+	MOVE_IDS[83] = "Fire Spin"
+	MOVE_IDS[84] = "Thunder Shock"
+	MOVE_IDS[85] = "Thunderbolt"
+	MOVE_IDS[86] = "Thunder Wave"
+	MOVE_IDS[87] = "Thunder"
+	MOVE_IDS[88] = "Rock Throw"
+	MOVE_IDS[89] = "Earthquake"
+	MOVE_IDS[90] = "Fissure"
+	MOVE_IDS[91] = "Dig"
+	MOVE_IDS[92] = "Toxic"
+	MOVE_IDS[93] = "Confusion"
+	MOVE_IDS[94] = "Psychic"
+	MOVE_IDS[95] = "Hypnosis"
+	MOVE_IDS[96] = "Meditate"
+	MOVE_IDS[97] = "Agility"
+	MOVE_IDS[98] = "Quick Attack"
+	MOVE_IDS[99] = "Rage"
+	MOVE_IDS[100] = "Teleport"
+	MOVE_IDS[101] = "Night Shade"
+	MOVE_IDS[102] = "Mimic"
+	MOVE_IDS[103] = "Screech"
+	MOVE_IDS[104] = "Double Team"
+	MOVE_IDS[105] = "Recover"
+	MOVE_IDS[106] = "Harden"
+	MOVE_IDS[107] = "Minimize"
+	MOVE_IDS[108] = "Smokescreen"
+	MOVE_IDS[109] = "Confuse Ray"
+	MOVE_IDS[110] = "Withdraw"
+	MOVE_IDS[111] = "Defense Curl"
+	MOVE_IDS[112] = "Barrier"
+	MOVE_IDS[113] = "Light Screen"
+	MOVE_IDS[114] = "Haze"
+	MOVE_IDS[115] = "Reflect"
+	MOVE_IDS[116] = "Focus Energy"
+	MOVE_IDS[117] = "Bide"
+	MOVE_IDS[118] = "Metronome"
+	MOVE_IDS[119] = "Mirror Move"
+	MOVE_IDS[120] = "Self-Destruct"
+	MOVE_IDS[121] = "Egg Bomb"
+	MOVE_IDS[122] = "Lick"
+	MOVE_IDS[123] = "Smog"
+	MOVE_IDS[124] = "Sludge"
+	MOVE_IDS[125] = "Bone Club"
+	MOVE_IDS[126] = "Fire Blast"
+	MOVE_IDS[127] = "Waterfall"
+	MOVE_IDS[128] = "Clamp"
+	MOVE_IDS[129] = "Swift"
+	MOVE_IDS[130] = "Skull Bash"
+	MOVE_IDS[131] = "Spike Cannon"
+	MOVE_IDS[132] = "Constrict"
+	MOVE_IDS[133] = "Amnesia"
+	MOVE_IDS[134] = "Kinesis"
+	MOVE_IDS[135] = "Soft-Boiled"
+	MOVE_IDS[136] = "High Jump Kick"
+	MOVE_IDS[137] = "Glare"
+	MOVE_IDS[138] = "Dream Eater"
+	MOVE_IDS[139] = "Poison Gas"
+	MOVE_IDS[140] = "Barrage"
+	MOVE_IDS[141] = "Leech Life"
+	MOVE_IDS[142] = "Lovely Kiss"
+	MOVE_IDS[143] = "Sky Attack"
+	MOVE_IDS[144] = "Transform"
+	MOVE_IDS[145] = "Bubble"
+	MOVE_IDS[146] = "Dizzy Punch"
+	MOVE_IDS[147] = "Spore"
+	MOVE_IDS[148] = "Flash"
+	MOVE_IDS[149] = "Psywave"
+	MOVE_IDS[150] = "Splash"
+	MOVE_IDS[151] = "Acid Armor"
+	MOVE_IDS[152] = "Crabhammer"
+	MOVE_IDS[153] = "Explosion"
+	MOVE_IDS[154] = "Fury Swipes"
+	MOVE_IDS[155] = "Bonemerang"
+	MOVE_IDS[156] = "Rest"
+	MOVE_IDS[157] = "Rock Slide"
+	MOVE_IDS[158] = "Hyper Fang"
+	MOVE_IDS[159] = "Sharpen"
+	MOVE_IDS[160] = "Conversion"
+	MOVE_IDS[161] = "Tri Attack"
+	MOVE_IDS[162] = "Super Fang"
+	MOVE_IDS[163] = "Slash"
+	MOVE_IDS[164] = "Substitute"
+	MOVE_IDS[165] = "Struggle"
 end
 
+function have_currents_changed()
+	return not (currpokemon == currents[1] and
+	        currlevel   == currents[2] and
+			currhp      == currents[3] and
+			maxhp       == currents[4] and
+			currmoves[1]== currents[5][1] and
+			currmoves[2]== currents[5][2] and
+			currmoves[3]== currents[5][3] and
+			currmoves[4]== currents[5][4] and
+			currpp[1]   == currents[6][1] and
+			currpp[2]   == currents[6][2] and
+			currpp[3]   == currents[6][3] and
+			currpp[4]   == currents[6][4] and
+			currexp     == currents[7]
+			)
+end
 -- VARIABLES TO EDIT --
 SIZE = 10
-SHOW_CURRENT_POSITION = false
-DO_POSITION_GRADIENT = false
+SHOW_CURRENT_POSITION = true
+DO_POSITION_GRADIENT = true
 SHOW_POKEMON_INFO = true
 
 POSITION_GRADIENT_MODE = "rank" -- options are: "rank", "frames", "logframes"
@@ -359,25 +543,22 @@ BACKGROUND_COLOR = "gray" -- luacolor
 graphics_pos = {0,0,0}
 -- INITIALIZE CANVAS --
 create_graphics_variables()
-if SHOW_CURRENT_POSITION or DO_POSITION_GRADIENT then
-	new_canvas = gui.createcanvas(42*SIZE+10,37*SIZE)
-	new_canvas.DrawRectangle(0,0,42*SIZE+10,37*SIZE,BACKGROUND_COLOR,BACKGROUND_COLOR)
-	new_canvas.SetTitle("RedGraphics")
-	draw_map(new_canvas,0 )
-	draw_map(new_canvas,12)
-	draw_map(new_canvas,37)
-	draw_map(new_canvas,38)
-	draw_map(new_canvas,39)
-	draw_map(new_canvas,40)
-	client.SetGameExtraPadding(0,0,0,8)
-end
-if SHOW_POKEMON_INFO then
-	client.SetGameExtraPadding(0,0,0,24)
-end
+new_canvas = gui.createcanvas(42*SIZE+10,37*SIZE)
+new_canvas.DrawRectangle(0,0,42*SIZE+10,37*SIZE,BACKGROUND_COLOR,BACKGROUND_COLOR)
+new_canvas.SetTitle("RedGraphics")
+draw_map(new_canvas,0 )
+draw_map(new_canvas,12)
+draw_map(new_canvas,37)
+draw_map(new_canvas,38)
+draw_map(new_canvas,39)
+draw_map(new_canvas,40)
+positions_gradient()
+currents = {}
+
 while true do
 	if DO_POSITION_GRADIENT then
-		if frame%update_multiple == 0 and emu.framecount() ~= 0 then
-			positions_gradient(10)
+		if frame%update_multiple <= 1 and emu.framecount() ~= 0 then
+			positions_gradient()
 			new_canvas.Refresh()
 		end
 	end
@@ -391,17 +572,28 @@ while true do
 	end
 	if SHOW_POKEMON_INFO then
 		currpokemon = memory.readbyte(0xD164)
-		if POKEMON[currpokemon] ~= nil then
-			currlevel = memory.readbyte(53644)
-			currhp = 128*memory.readbyte(53612)+memory.readbyte(53613)
-			maxhp = 128*memory.readbyte(53645)+memory.readbyte(53646)
-			gui.text(0,288,"Pokemon: "..POKEMON[currpokemon].." Level "..currlevel)
-			if currlevel < 100 then
-				currexp = memory.readbyte(53625)*256*256 + memory.readbyte(53626)*256 + memory.readbyte(53627)
-				tonextlevel = math.floor(6/5 * (currlevel+1)^3 - 15*(currlevel+1)^2 + 100*(currlevel+1) - 140)
-				gui.text(0,288+16,"HP: "..currhp.."/"..maxhp..", EXP:"..currexp.."/"..tonextlevel)
-			else
-				gui.text(0,288+16,"HP: "..currhp.."/"..maxhp)
+		currlevel = memory.readbyte(53644)
+		currhp = 128*memory.readbyte(53612)+memory.readbyte(53613)
+		maxhp = 128*memory.readbyte(53645)+memory.readbyte(53646)
+		currmoves = {memory.readbyte(53619),memory.readbyte(53620),memory.readbyte(53621),memory.readbyte(53622)}
+		currpp = {memory.readbyte(53640),memory.readbyte(53641),memory.readbyte(53642),memory.readbyte(53643)}
+		currexp = memory.readbyte(53625)*256*256 + memory.readbyte(53626)*256 + memory.readbyte(53627)
+		if have_currents_changed() then
+			currents = {currpokemon,currlevel,currhp,maxhp,{currmoves[1],currmoves[2],currmoves[3],currmoves[4]},{currpp[1],currpp[2],currpp[3],currpp[4]},currexp}
+			new_canvas.DrawRectangle(11*SIZE+5,19*SIZE,16*SIZE,7*15,BACKGROUND_COLOR,BACKGROUND_COLOR)
+			if POKEMON[currpokemon] ~= nil then	
+				new_canvas.DrawText(11*SIZE+5,19*SIZE,POKEMON[currpokemon].." Level "..currlevel,"white","black")
+				new_canvas.DrawText(11*SIZE+5,19*SIZE + 15,"HP: "..currhp.."/"..maxhp,"white","black")
+				if currlevel < 100 then
+					currexp = memory.readbyte(53625)*256*256 + memory.readbyte(53626)*256 + memory.readbyte(53627)
+					tonextlevel = math.floor(6/5 * (currlevel+1)^3 - 15*(currlevel+1)^2 + 100*(currlevel+1) - 140)
+					new_canvas.DrawText(11*SIZE+5,19*SIZE + 30,"EXP:"..currexp.."/"..tonextlevel,"white","black")
+				end
+				for i=1,4 do
+					if MOVE_IDS[currmoves[i]] ~= nil then
+						new_canvas.DrawText(11*SIZE+5,19*SIZE + 30 + i*15,"-"..MOVE_IDS[currmoves[i]]..": "..currpp[i].." PP","white","black")
+					end
+				end
 			end
 		end
 	end

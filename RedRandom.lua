@@ -10,6 +10,8 @@ function update_buttons()
 	local temp_file = io.open(temp_name,"w")
 	io.input(buttons_file)
 	io.output(temp_file)
+	io.read("*line")
+	io.write(frame.."\n")
 	for i=1,8 do
 		local get = io.read("*line") + new_buttons[i]
 		io.write(get.."\n")
@@ -23,7 +25,7 @@ function transfer_buttons(from_name,to_name)
 	local to_file = io.open(to_name,"w")
 	io.input(from_file)
 	io.output(to_file)
-	for i=1,8 do
+	for i=1,9 do
 		io.write((io.read("*line")).."\n")
 	end
 	from_file:close()
@@ -32,6 +34,7 @@ end
 function save_new_buttons(buttons_array)
 	local buttons_file = io.open(buttons_name,"w")
 	io.output(buttons_file)
+	io.write(frame.."\n")
 	for n=1,8 do
 		io.write(buttons_array[n].."\n")
 	end
@@ -44,6 +47,7 @@ end
 function save_new_positions(positions_array)
 	local positions_file = io.open(positions_name,"w")
 	io.output(positions_file)
+	io.write(frame.."\n")
 	io.write(#positions_array.."\n")
 	for i=1,#positions_array do
 		io.write(positions_array[i][1].." "..positions_array[i][2].." "..positions_array[i][3].." "..positions_array[i][4].."\n")
@@ -55,9 +59,7 @@ function transfer_positions(from_name,to_name,length)
 	local to_file = io.open(to_name,"w")
 	io.input(from_file)
 	io.output(to_file)
-	-- Note: The transfer_positions function is only used in the function update_positions. 
-	-- That function creates a half-finished positions file with no length indicator - that is stored and changed locally. 
-	-- A proper transfer_positions function may be added later.
+	io.write(frame.."\n")
 	io.write(length.."\n")
 	for i=1,length do
 		io.write((io.read("*line")).."\n")
@@ -85,6 +87,7 @@ function update_positions()
 	local temp_file = io.open(temp_name,"w")
 	io.input(positions_file)
 	io.output(temp_file)
+	io.read("*line")
 	local read_length = io.read("*line")
 	for i=1,read_length do
 		read_position = {io.read("*number"),io.read("*number"),io.read("*number")}
@@ -112,6 +115,7 @@ end
 function sort_positions()
 	local positions_file = io.open(positions_name,"r")
 	io.input(positions_file)
+	io.read("*line")
 	local read_number = io.read("*line")
 	local read_positions = {}
 	for i=1,read_number do
@@ -214,40 +218,29 @@ end
 function create_new_events_file()
 	local events_file = io.open(events_name,"w")
 	io.output(events_file)
+	io.write(frame.."\n")
 	io.write("\n")
 	events_file:close()
 end
 function create_events_file(events_array)
 	local events_file = io.open(events_name,"w")
 	io.output(events_file)
+	io.write(frame.."\n")
 	for i=1,#events_array do
-		io.write(events_array[i].."\n")
-	end
-	for i=1,max_events-#events_array do
-		io.write(" ".."\n")
-	end
-	events_file:close()
-end
-function load_events()
-	local events_file = io.open(events_name,"r")
-	io.input(events_file)
-	for i=1,max_events do
-		local line = io.read("*line")
-		if line == " " then
-			break
+		if events_array[i][1] == "map" then
+			if MAP_NAMES[events_array[i][2]] == nil then
+				io.write("-"..(frame-events_array[i][3])..": Entered map "..events_array[i][2].."\n")
+			else
+				io.write("-"..(frame-events_array[i][3])..": Entered "..MAP_NAMES[events_array[i][2]].."\n")
+			end
 		end
-		new_events[i] = line
 	end
 	events_file:close()
 end
 function update_events_variable()
 	if new_events["map"] ~= current_map then
 		new_events["map"] = current_map
-		if MAP_NAMES[current_map] == nil then
-			table.insert(new_events,1,frame..": Entered map "..current_map)
-		else
-			table.insert(new_events,1,frame..": Entered "..MAP_NAMES[current_map])
-		end
+		table.insert(new_events,1,{"map",current_map,frame})
 		table.remove(new_events,max_events+1)
 		create_events_file(new_events)
 	end
