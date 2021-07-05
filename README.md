@@ -3,7 +3,7 @@ Plays Pokemon Red Randomly in BizHawk Emulator. For an example of the program in
 
 ## Requirements
 - Pokemon Red ROM
-- [Bizhawk Emulator 2.6.1](https://github.com/TASVideos/BizHawk/releases/) (No guarantee it will work on previous or subsequent versions of Bizhawk, or any other emulator.)
+- [Bizhawk Emulator 2.6.2](https://github.com/TASVideos/BizHawk/releases/) (No guarantee it will work on previous or subsequent versions of Bizhawk, or any other emulator.)
 - Windows, probably (I don't think Lua Console is available on the Mac version of Bizhawk, though I'm not sure.)
 
 ## Instructions
