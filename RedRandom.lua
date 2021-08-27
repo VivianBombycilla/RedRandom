@@ -556,7 +556,7 @@ MAP_NAMES[44] = "Viridian House 1"
 MAP_NAMES[255] = "N/A"
 
 ---- MAIN ----
-from_form = false
+from_form = true
 
 -- INITIALIZATION --
 console.clear()
