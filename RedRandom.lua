@@ -278,6 +278,9 @@ function update_variables()
 	if log_events then
 		update_events_variable()
 	end
+	if do_happening_update then
+		update_happening_file()
+	end
 end
 function update_savefiles()
 	save_info()
@@ -317,6 +320,7 @@ function create_file_names()
 	info_name = save_file_name.."_info.txt"
 	events_name = save_file_name.."_events.txt"
 	savestate_name = "Savestates/"..save_file_name..".state"
+	happening_name = save_file_name.."_happening.txt"
 	temp_name = save_file_name.."_temp.txt"
 end
 function create_new_update_variables()
@@ -359,7 +363,6 @@ function initialize()
 	start_time = os.clock()
 	create_file_names()
 	create_new_update_variables()
-	
 	if tastudio.engaged() then
 		error("Close TASStudio!")
 	end
@@ -376,6 +379,7 @@ function initialize()
 			error("Savefiles missing!")
 		end
 	else
+		random_seed = {starting_random_seed[1],starting_random_seed[2],starting_random_seed[3]}
 		savestate.load("Savestates/blank.state")
 		print("Initializing savefiles!")
 		initialize_savefiles()
@@ -384,7 +388,6 @@ function initialize()
 	end
 	print_info()
 end
-
 
 function continue_save_button()
 	if forms.gettext(form_ids["savefile"]) == "" then
@@ -461,7 +464,6 @@ function new_save_button()
 		return
 	else
 		starting_random_seed = {tonumber(forms.gettext(form_ids["seed 1"])),tonumber(forms.gettext(form_ids["seed 2"])),tonumber(forms.gettext(form_ids["seed 3"]))}
-		random_seed = {starting_random_seed[1],starting_random_seed[2],starting_random_seed[3]}
 	end
 	if forms.ischecked(form_ids["buttons"]) then
 		save_buttons = true
@@ -521,6 +523,22 @@ function create_form()
 	forms.button(test_form,"New save",new_save_button,0,150,100,20)
 end
 
+
+
+function update_happening_file()
+	local happening_file = io.open(happening_name,"w")
+	io.output(happening_file)
+	io.write("Current frame: "..frame.."\n")
+	io.write("Current map: "..MAP_NAMES[current_map].."\n")
+	io.write("Current position: x:"..current_position[2].." y:"..current_position[3].."\n")
+	io.write("Current button: "..BUTTONS[button].."\n")
+	io.write("Since last save... ("..(frame%update_multiple).."/"..update_multiple..")\n")
+	table.sort(new_positions, compare_positions)
+	io.write("Most visited space: "..MAP_NAMES[new_positions[1][1]].." x:"..new_positions[1][2].." y:"..new_positions[1][3].."\n")
+	io.write("with "..new_positions[1][4].." frames")
+	happening_file:close()
+end
+
 ---- STATIC VARIABLES ----
 BUTTONS = {"U........",".D.......","..L......","...R.....","....S....",".....s...","......B..",".......A."}
 MAP_NAMES = {}
@@ -535,13 +553,34 @@ MAP_NAMES[41] = "Viridian Pokémon Center"
 MAP_NAMES[42] = "Viridian Poké Mart"
 MAP_NAMES[43] = "Trainers' School"
 MAP_NAMES[44] = "Viridian House 1"
+MAP_NAMES[255] = "N/A"
 
 ---- MAIN ----
+from_form = false
+
 -- INITIALIZATION --
 console.clear()
 print("--RedRandom by Vivian--")
 ready = false
-create_form()
+if from_form then
+	do_happening_update = false
+	create_form()
+else
+	start_new = false
+	save_file_name = "Noform"
+	update_multiple = 3600
+	endless = true
+	end_frame = 216000
+	end_conditions = {"parcel"} -- options: "parcel"
+	starting_random_seed = {1,1,1}
+	save_buttons = true
+	save_positions = true
+	do_sort_positions = true
+	log_events = true
+	max_events = 5
+	do_happening_update = true
+	ready = true
+end
 frame = 0
 -- MAIN LOOP --
 while true do
