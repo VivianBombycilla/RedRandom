@@ -197,7 +197,7 @@ function print_info()
 			temp_str = temp_str.."Positions"
 			temp_bool = true
 		end
-		if save_positions then
+		if log_events then
 			if temp_bool then temp_str = temp_str..", " end
 			temp_str = temp_str.."Events"
 			temp_bool = true
