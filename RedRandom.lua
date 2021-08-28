@@ -315,13 +315,13 @@ function try_opening_important_files()
 end
 
 function create_file_names()
-	buttons_name = save_file_name.."_buttons.txt"
-	positions_name = save_file_name.."_positions.txt"
-	info_name = save_file_name.."_info.txt"
-	events_name = save_file_name.."_events.txt"
-	savestate_name = "Savestates/"..save_file_name..".state"
-	happening_name = save_file_name.."_happening.txt"
-	temp_name = save_file_name.."_temp.txt"
+	buttons_name = "Saves/"..save_file_name.."_buttons.txt"
+	positions_name = "Saves/"..save_file_name.."_positions.txt"
+	info_name = "Saves/"..save_file_name.."_info.txt"
+	events_name = "Saves/"..save_file_name.."_events.txt"
+	savestate_name = "Saves/"..save_file_name..".state"
+	happening_name = "Saves/"..save_file_name.."_happening.txt"
+	temp_name = "Saves/"..save_file_name.."_temp.txt"
 end
 function create_new_update_variables()
 	new_buttons = {0,0,0,0,0,0,0,0}
@@ -561,7 +561,7 @@ from_form = true
 -- INITIALIZATION --
 console.clear()
 print("--RedRandom by Vivian--")
-print("Last updated: Aug 27 2021")
+print("Last updated: Aug 28 2021")
 ready = false
 if from_form then
 	do_happening_update = false
