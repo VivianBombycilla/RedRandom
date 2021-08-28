@@ -561,6 +561,7 @@ from_form = true
 -- INITIALIZATION --
 console.clear()
 print("--RedRandom by Vivian--")
+print("Last updated: Aug 27 2021")
 ready = false
 if from_form then
 	do_happening_update = false
