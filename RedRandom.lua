@@ -380,7 +380,7 @@ function initialize()
 		end
 	else
 		random_seed = {starting_random_seed[1],starting_random_seed[2],starting_random_seed[3]}
-		savestate.load("Savestates/blank.state")
+		savestate.load("Saves/blank.state")
 		print("Initializing savefiles!")
 		initialize_savefiles()
 		savestate.save(savestate_name)
